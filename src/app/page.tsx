@@ -26,7 +26,7 @@ export default function HomePage() {
           <div className="max-w-2xl">
             <Reveal className="space-y-6">
               <div className="flex items-center gap-3">
-                <span className="section-kicker">AI applications / LLM systems</span>
+                <span className="section-kicker">Bento AIII / AI systems company</span>
                 <span className="hud-line max-w-xs" />
               </div>
 
@@ -36,25 +36,28 @@ export default function HomePage() {
                 </p>
                 <h1 className="text-5xl font-semibold leading-none tracking-[-0.04em] text-white md:text-[5.5rem]">
                   Bento AIII
+                  <span className="mt-3 block text-[0.48em] font-medium tracking-[-0.03em] text-slate-200">
+                    builds the layer around the model.
+                  </span>
                 </h1>
               </div>
 
               <p className="max-w-2xl text-2xl leading-tight text-slate-100 md:text-[1.95rem]">
-                AI applications, LLM systems, and workflow software built for real operating work.
+                AI applications, LLM systems, and workflow software for teams that need product discipline, clear review paths, and systems that hold up outside the demo.
               </p>
 
               <p className="max-w-xl text-base leading-8 text-slate-400">
-                {companyProfile.description} The company works where product shape, system
-                behavior, and delivery constraints all need to stay in the same conversation.
+                {companyProfile.description} Bento AIII works where product shape, system
+                behavior, and delivery constraints all need to stay in the same frame.
               </p>
             </Reveal>
 
             <Reveal delay={0.1} className="mt-8 flex flex-wrap gap-4">
               <Link href="/contact" className="button-primary">
-                Project inquiry
+                Start scoped inquiry
               </Link>
               <Link href="/projects" className="button-secondary">
-                View project tracks
+                See current tracks
               </Link>
             </Reveal>
 
@@ -129,7 +132,7 @@ export default function HomePage() {
                 delay={0.06 * index}
                 className="surface pixel-corner p-6 md:p-7"
               >
-                <p className="font-pixel text-[0.68rem] uppercase tracking-[0.18em] text-accent/80">
+                <p className="font-pixel text-[0.68rem] uppercase tracking-[0.18em] text-accent">
                   0{index + 1}
                 </p>
                 <h3 className="mt-4 text-2xl font-semibold text-white">{pillar.title}</h3>

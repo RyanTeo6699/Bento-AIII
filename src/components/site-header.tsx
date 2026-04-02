@@ -22,18 +22,20 @@ export function SiteHeader() {
         <div className="surface px-4 py-3 backdrop-blur-xl">
           <div className="flex items-center justify-between gap-6">
             <Link href="/" className="flex items-center gap-3">
-              <span className="grid grid-cols-2 gap-1">
-                <span className="h-2.5 w-2.5 bg-accent shadow-[0_0_16px_rgba(46,232,255,0.8)]" />
-                <span className="h-2.5 w-2.5 bg-white/15" />
-                <span className="h-2.5 w-2.5 bg-white/15" />
-                <span className="h-2.5 w-2.5 bg-violet" />
+              <span className="brand-mark">
+                <span className="brand-grid">
+                  <span className="bg-accent shadow-[0_0_16px_rgba(46,232,255,0.8)]" />
+                  <span className="bg-white/15" />
+                  <span className="bg-white/15" />
+                  <span className="bg-violet" />
+                </span>
               </span>
               <div className="flex flex-col">
                 <span className="text-sm font-semibold tracking-[0.14em] text-white">
                   Bento AIII
                 </span>
                 <span className="font-pixel text-[0.6rem] uppercase tracking-[0.22em] text-slate-500">
-                  AI applications / LLM systems
+                  systems, products, workflow software
                 </span>
               </div>
             </Link>
@@ -64,7 +66,7 @@ export function SiteHeader() {
 
             <div className="hidden md:block">
               <Link href="/contact" className="button-primary">
-                Project inquiry
+                Start inquiry
               </Link>
             </div>
 
@@ -115,7 +117,7 @@ export function SiteHeader() {
                     );
                   })}
                   <Link href="/contact" className="button-primary mt-2 w-full">
-                    Project inquiry
+                    Start inquiry
                   </Link>
                 </div>
               </motion.div>

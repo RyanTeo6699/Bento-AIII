@@ -3,6 +3,9 @@
 import type { FormEvent } from "react";
 import { useState } from "react";
 
+type FieldName = "name" | "company" | "email" | "projectType" | "message";
+type FieldErrors = Partial<Record<FieldName, string>>;
+
 type FormStatus =
   | { state: "idle" }
   | { state: "loading" }
@@ -19,13 +22,64 @@ const inquiryOptions = [
   { value: "advisory", label: "Scoping and advisory" }
 ];
 
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 function readField(formData: FormData, key: string) {
   const value = formData.get(key);
   return typeof value === "string" ? value.trim() : "";
 }
 
+function validatePayload(payload: {
+  name: string;
+  company: string;
+  email: string;
+  projectType: string;
+  message: string;
+}) {
+  const errors: FieldErrors = {};
+
+  if (payload.name.length < 2) {
+    errors.name = "Enter a name with at least 2 characters.";
+  }
+
+  if (!emailPattern.test(payload.email)) {
+    errors.email = "Enter a valid email address.";
+  }
+
+  if (!payload.projectType) {
+    errors.projectType = "Select the inquiry type that fits best.";
+  }
+
+  if (payload.company.length > 120) {
+    errors.company = "Keep the company or team field under 120 characters.";
+  }
+
+  if (payload.message.length < 24) {
+    errors.message = "Describe the workflow or problem in at least 24 characters.";
+  }
+
+  if (payload.message.length > 2400) {
+    errors.message = "Keep the project brief under 2400 characters.";
+  }
+
+  return errors;
+}
+
 export function ContactForm() {
   const [status, setStatus] = useState<FormStatus>(initialStatus);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+
+  function clearFieldError(field: FieldName) {
+    setFieldErrors((current) => {
+      if (!current[field]) {
+        return current;
+      }
+
+      const next = { ...current };
+      delete next[field];
+      return next;
+    });
+  }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -41,6 +95,17 @@ export function ContactForm() {
       website: readField(formData, "website")
     };
 
+    const nextFieldErrors = validatePayload(payload);
+    if (Object.keys(nextFieldErrors).length > 0) {
+      setFieldErrors(nextFieldErrors);
+      setStatus({
+        state: "error",
+        message: "Please correct the highlighted fields and submit again."
+      });
+      return;
+    }
+
+    setFieldErrors({});
     setStatus({ state: "loading" });
 
     try {
@@ -57,9 +122,11 @@ export function ContactForm() {
         message?: string;
         error?: string;
         reference?: string;
+        fieldErrors?: FieldErrors;
       };
 
       if (!response.ok || !result.ok) {
+        setFieldErrors(result.fieldErrors ?? {});
         setStatus({
           state: "error",
           message:
@@ -70,6 +137,7 @@ export function ContactForm() {
       }
 
       form.reset();
+      setFieldErrors({});
       setStatus({
         state: "success",
         message:
@@ -104,13 +172,23 @@ export function ContactForm() {
               ? "border-emerald-400/30 bg-emerald-400/10 text-emerald-100"
               : status.state === "error"
                 ? "border-rose-400/30 bg-rose-400/10 text-rose-100"
-                : "border-accent/30 bg-accent/10 text-white"
+                : "border-[rgba(46,232,255,0.3)] bg-[rgba(46,232,255,0.1)] text-white"
           }`}
         >
           <p>{status.state === "loading" ? "Submitting inquiry..." : status.message}</p>
           {"reference" in status && status.reference ? (
             <p className="mt-2 font-pixel text-[0.68rem] uppercase tracking-[0.16em]">
               Reference: {status.reference}
+            </p>
+          ) : null}
+          {status.state === "success" ? (
+            <p className="mt-2 text-xs leading-6 text-emerald-100/80">
+              If the request is time-sensitive, send the same reference to
+              {" "}
+              <a href="mailto:hello@bentoaiii.com" className="underline underline-offset-4">
+                hello@bentoaiii.com
+              </a>
+              .
             </p>
           ) : null}
         </div>
@@ -126,8 +204,11 @@ export function ContactForm() {
             placeholder="Your name"
             minLength={2}
             maxLength={80}
+            aria-invalid={Boolean(fieldErrors.name)}
+            onChange={() => clearFieldError("name")}
             required
           />
+          {fieldErrors.name ? <p className="field-error">{fieldErrors.name}</p> : null}
         </label>
 
         <label className="space-y-2 text-sm text-slate-300">
@@ -138,7 +219,10 @@ export function ContactForm() {
             name="company"
             placeholder="Company or team"
             maxLength={120}
+            aria-invalid={Boolean(fieldErrors.company)}
+            onChange={() => clearFieldError("company")}
           />
+          {fieldErrors.company ? <p className="field-error">{fieldErrors.company}</p> : null}
         </label>
 
         <label className="space-y-2 text-sm text-slate-300">
@@ -148,13 +232,23 @@ export function ContactForm() {
             type="email"
             name="email"
             placeholder="name@company.com"
+            aria-invalid={Boolean(fieldErrors.email)}
+            onChange={() => clearFieldError("email")}
             required
           />
+          {fieldErrors.email ? <p className="field-error">{fieldErrors.email}</p> : null}
         </label>
 
         <label className="space-y-2 text-sm text-slate-300">
           <span>Inquiry type</span>
-          <select className="form-input" name="projectType" defaultValue="" required>
+          <select
+            className="form-input"
+            name="projectType"
+            defaultValue=""
+            aria-invalid={Boolean(fieldErrors.projectType)}
+            onChange={() => clearFieldError("projectType")}
+            required
+          >
             <option value="" disabled>
               Select a track
             </option>
@@ -164,6 +258,9 @@ export function ContactForm() {
               </option>
             ))}
           </select>
+          {fieldErrors.projectType ? (
+            <p className="field-error">{fieldErrors.projectType}</p>
+          ) : null}
         </label>
 
         <label className="space-y-2 text-sm text-slate-300 md:col-span-2">
@@ -174,8 +271,20 @@ export function ContactForm() {
             placeholder="What is the workflow, team, or business problem you want to solve?"
             minLength={24}
             maxLength={2400}
+            aria-invalid={Boolean(fieldErrors.message)}
+            onChange={() => clearFieldError("message")}
             required
           />
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            {fieldErrors.message ? (
+              <p className="field-error">{fieldErrors.message}</p>
+            ) : (
+              <p className="text-xs leading-5 text-slate-500">
+                Enough detail to explain the workflow, the constraint, and what needs to change.
+              </p>
+            )}
+            <p className="text-xs leading-5 text-slate-500">24-2400 characters</p>
+          </div>
         </label>
 
         <label className="hidden">

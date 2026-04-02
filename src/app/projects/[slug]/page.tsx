@@ -53,7 +53,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
         <div className="shell relative pb-16 pt-8">
           <Link
             href="/projects"
-            className="section-kicker inline-flex items-center gap-2 text-accent/90 hover:text-accent"
+            className="section-kicker inline-flex items-center gap-2 text-accent hover:opacity-100"
           >
             Back to projects
           </Link>

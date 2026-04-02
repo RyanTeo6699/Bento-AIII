@@ -22,21 +22,23 @@ const runtimeLog = [
   "ship.iteration -> controlled rollout + feedback"
 ];
 
+const brandPrinciples = ["Product discipline", "System clarity", "Visible review"];
+
 export function HeroScene() {
   return (
     <div className="surface pixel-corner relative h-[440px] w-full p-4 lg:h-[560px] lg:p-5">
       <div className="absolute inset-0 outline-grid opacity-30" />
 
       <div className="flex items-center justify-between gap-4 border-b border-white/10 pb-3">
-        <span className="section-kicker text-[0.58rem]">System board</span>
-        <span className="signal-chip">Bento AIII</span>
+        <span className="section-kicker text-[0.58rem]">Bento system board</span>
+        <span className="signal-chip">AI / LLM / workflow</span>
       </div>
 
       <div className="mt-4 grid gap-4 lg:grid-cols-[1.08fr_0.92fr]">
         <div className="space-y-4">
           <div className="terminal-panel outline-grid relative overflow-hidden p-5">
             <motion.div
-              className="absolute left-0 right-0 top-0 h-12 bg-gradient-to-b from-accent/12 to-transparent"
+              className="absolute left-0 right-0 top-0 h-12 bg-[linear-gradient(180deg,rgba(46,232,255,0.12),transparent)]"
               animate={{ y: [-48, 216, -48] }}
               transition={{ duration: 7.6, repeat: Infinity, ease: "linear" }}
             />
@@ -52,7 +54,7 @@ export function HeroScene() {
                   </div>
                   <div className="h-2 overflow-hidden rounded-full bg-white/[0.06]">
                     <motion.div
-                      className="h-full bg-gradient-to-r from-accent/80 via-accent/40 to-violet/50"
+                      className="h-full bg-[linear-gradient(90deg,rgba(46,232,255,0.8),rgba(46,232,255,0.4),rgba(139,96,255,0.5))]"
                       initial={{ width: "35%" }}
                       animate={{ width: ["35%", "82%", "58%"] }}
                       transition={{
@@ -87,6 +89,38 @@ export function HeroScene() {
         </div>
 
         <div className="space-y-4">
+          <div className="terminal-panel p-5">
+            <div className="flex items-start justify-between gap-4">
+              <div className="space-y-3">
+                <p className="neo-microcopy">Brand frame</p>
+                <h3 className="text-3xl font-semibold tracking-[-0.04em] text-white">
+                  Bento AIII
+                </h3>
+                <p className="max-w-[18rem] text-sm leading-7 text-slate-400">
+                  Systems for real operating work. Product shape, model behavior, and review
+                  logic kept in one delivery frame.
+                </p>
+              </div>
+
+              <div className="brand-mark">
+                <span className="brand-grid">
+                  <span className="bg-accent shadow-[0_0_16px_rgba(46,232,255,0.7)]" />
+                  <span className="bg-white/15" />
+                  <span className="bg-white/15" />
+                  <span className="bg-violet" />
+                </span>
+              </div>
+            </div>
+
+            <div className="mt-5 flex flex-wrap gap-2">
+              {brandPrinciples.map((item) => (
+                <span key={item} className="signal-chip">
+                  {item}
+                </span>
+              ))}
+            </div>
+          </div>
+
           <div className="terminal-panel p-5">
             <p className="neo-microcopy">Signal panel</p>
             <div className="mt-4 space-y-3">
@@ -131,14 +165,6 @@ export function HeroScene() {
             </div>
           </div>
 
-          <div className="terminal-panel p-5">
-            <p className="section-kicker text-[0.56rem]">Brand readout</p>
-            <h3 className="mt-4 text-2xl font-semibold text-white">Bento AIII</h3>
-            <p className="mt-3 text-sm leading-7 text-slate-400">
-              AI applications, LLM systems, and workflow software built to stay legible
-              under real operating conditions.
-            </p>
-          </div>
         </div>
       </div>
     </div>

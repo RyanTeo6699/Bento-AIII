@@ -2,6 +2,10 @@ import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
+const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
+const RATE_LIMIT_MAX = 5;
+const rateLimitStore = new Map<string, number[]>();
+
 const allowedProjectTypes = new Set([
   "ai-application",
   "llm-system",
@@ -21,6 +25,10 @@ type ContactPayload = {
   website?: string;
 };
 
+type ContactFieldErrors = Partial<
+  Record<"name" | "company" | "email" | "projectType" | "message", string>
+>;
+
 function readString(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
 }
@@ -34,13 +42,68 @@ function escapeHtml(value: string) {
     .replaceAll("'", "&#39;");
 }
 
+function getClientIp(request: Request) {
+  const forwarded = request.headers.get("x-forwarded-for");
+  if (forwarded) {
+    return forwarded.split(",")[0]?.trim() || "unknown";
+  }
+
+  return request.headers.get("x-real-ip") ?? "unknown";
+}
+
+function checkRateLimit(ip: string) {
+  const now = Date.now();
+  const recent = (rateLimitStore.get(ip) ?? []).filter(
+    (timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS
+  );
+
+  if (recent.length >= RATE_LIMIT_MAX) {
+    rateLimitStore.set(ip, recent);
+    return false;
+  }
+
+  recent.push(now);
+  rateLimitStore.set(ip, recent);
+  return true;
+}
+
+function validatePayload(payload: ContactPayload) {
+  const fieldErrors: ContactFieldErrors = {};
+
+  if (payload.name.length < 2) {
+    fieldErrors.name = "Name must be at least 2 characters.";
+  }
+
+  if (payload.company.length > 120) {
+    fieldErrors.company = "Company or team field is too long.";
+  }
+
+  if (!emailPattern.test(payload.email)) {
+    fieldErrors.email = "A valid email address is required.";
+  }
+
+  if (!allowedProjectTypes.has(payload.projectType)) {
+    fieldErrors.projectType = "Select a valid inquiry type.";
+  }
+
+  if (payload.message.length < 24) {
+    fieldErrors.message = "Project brief must be at least 24 characters.";
+  }
+
+  if (payload.message.length > 2400) {
+    fieldErrors.message = "Project brief is too long.";
+  }
+
+  return fieldErrors;
+}
+
 async function forwardWithResend(payload: ContactPayload, reference: string) {
   const apiKey = process.env.RESEND_API_KEY;
   const inbox = process.env.CONTACT_INBOX_EMAIL;
   const from = process.env.CONTACT_FROM_EMAIL;
 
   if (!apiKey || !inbox || !from) {
-    return;
+    return { mode: "logged-only" as const };
   }
 
   const html = `
@@ -72,16 +135,20 @@ async function forwardWithResend(payload: ContactPayload, reference: string) {
   if (!response.ok) {
     throw new Error(await response.text());
   }
+
+  return { mode: "forwarded" as const };
 }
 
 export async function POST(request: Request) {
   let body: Record<string, unknown>;
+  const clientIp = getClientIp(request);
+  const reference = `BA-${Date.now().toString(36).toUpperCase()}`;
 
   try {
     body = (await request.json()) as Record<string, unknown>;
   } catch {
     return NextResponse.json(
-      { ok: false, error: "Invalid request payload." },
+      { ok: false, error: "Invalid request payload.", reference },
       { status: 400 }
     );
   }
@@ -95,9 +162,11 @@ export async function POST(request: Request) {
     website: readString(body.website)
   };
 
-  const reference = `BA-${Date.now().toString(36).toUpperCase()}`;
-
   if (payload.website) {
+    console.warn(
+      "[contact.honeypot]",
+      JSON.stringify({ reference, clientIp, submittedAt: new Date().toISOString() })
+    );
     return NextResponse.json({
       ok: true,
       message: "Inquiry received.",
@@ -105,37 +174,33 @@ export async function POST(request: Request) {
     });
   }
 
-  const errors: string[] = [];
-
-  if (payload.name.length < 2) {
-    errors.push("Name must be at least 2 characters.");
-  }
-
-  if (!emailPattern.test(payload.email)) {
-    errors.push("A valid email address is required.");
-  }
-
-  if (!allowedProjectTypes.has(payload.projectType)) {
-    errors.push("Select a valid inquiry type.");
-  }
-
-  if (payload.message.length < 24) {
-    errors.push("Project brief must be at least 24 characters.");
-  }
-
-  if (payload.message.length > 2400) {
-    errors.push("Project brief is too long.");
-  }
-
-  if (payload.company.length > 120) {
-    errors.push("Company or team field is too long.");
-  }
-
-  if (errors.length > 0) {
+  if (!checkRateLimit(clientIp)) {
+    console.warn(
+      "[contact.rate_limited]",
+      JSON.stringify({ reference, clientIp, submittedAt: new Date().toISOString() })
+    );
     return NextResponse.json(
       {
         ok: false,
-        error: errors[0],
+        error: "Too many inquiries from this connection. Please wait a few minutes and try again.",
+        reference
+      },
+      { status: 429 }
+    );
+  }
+
+  const fieldErrors = validatePayload(payload);
+
+  if (Object.keys(fieldErrors).length > 0) {
+    const firstError =
+      Object.values(fieldErrors).find((value): value is string => Boolean(value)) ??
+      "Validation failed.";
+
+    return NextResponse.json(
+      {
+        ok: false,
+        error: firstError,
+        fieldErrors,
         reference
       },
       { status: 400 }
@@ -143,18 +208,50 @@ export async function POST(request: Request) {
   }
 
   console.info(
-    "[contact]",
+    "[contact.received]",
     JSON.stringify({
-      ...payload,
       reference,
+      clientIp,
+      projectType: payload.projectType,
+      name: payload.name,
+      company: payload.company || null,
+      email: payload.email,
+      messageLength: payload.message.length,
       submittedAt: new Date().toISOString()
     })
   );
 
   try {
-    await forwardWithResend(payload, reference);
+    const delivery = await forwardWithResend(payload, reference);
+
+    if (delivery.mode === "logged-only") {
+      console.info(
+        "[contact.logged_only]",
+        JSON.stringify({
+          reference,
+          clientIp,
+          reason: "missing_resend_env",
+          submittedAt: new Date().toISOString()
+        })
+      );
+
+      return NextResponse.json({
+        ok: true,
+        message:
+          "Inquiry reached the site backend. Email forwarding is not configured yet, so also email hello@bentoaiii.com if the request is time-sensitive.",
+        reference
+      });
+    }
   } catch (error) {
-    console.error("[contact:forward]", error);
+    console.error(
+      "[contact.forward_failed]",
+      JSON.stringify({
+        reference,
+        clientIp,
+        error: error instanceof Error ? error.message : "unknown_error",
+        submittedAt: new Date().toISOString()
+      })
+    );
     return NextResponse.json(
       {
         ok: false,
@@ -168,7 +265,7 @@ export async function POST(request: Request) {
 
   return NextResponse.json({
     ok: true,
-    message: "Inquiry received. Bento AIII will follow up by email.",
+    message: "Inquiry received. Bento AIII will review it and follow up by email.",
     reference
   });
 }

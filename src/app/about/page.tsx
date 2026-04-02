@@ -89,7 +89,7 @@ export default function AboutPage() {
                 delay={0.06 * index}
                 className="surface pixel-corner p-6"
               >
-                <p className="text-xs uppercase tracking-[0.2em] text-accent/80">
+                <p className="text-xs uppercase tracking-[0.2em] text-accent">
                   Track 0{index + 1}
                 </p>
                 <h3 className="mt-4 text-2xl font-semibold text-white">{pillar.title}</h3>
