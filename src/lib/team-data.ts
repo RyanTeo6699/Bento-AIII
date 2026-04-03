@@ -55,9 +55,9 @@ const teamMemberDefinitions = {
     id: "ryan-z",
     name: "Ryan Z.",
     role: {
-      en: "Cybersecurity",
-      "zh-Hant": "網路安全",
-      ja: "サイバーセキュリティ"
+      en: "Network Security Engineer",
+      "zh-Hant": "網路安全工程師",
+      ja: "ネットワークセキュリティエンジニア"
     },
     bio: {
       en:
