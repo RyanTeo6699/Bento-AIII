@@ -36,7 +36,14 @@ export function LanguageSwitcher({
     document.cookie = `${localeCookieName}=${encodeURIComponent(
       nextLocale
     )}; path=/; max-age=31536000; samesite=lax`;
-    router.push(replaceLocaleInPathname(pathname, nextLocale));
+
+    const nextPathname = replaceLocaleInPathname(pathname, nextLocale);
+
+    if (nextPathname !== pathname) {
+      router.push(nextPathname);
+    }
+
+    router.refresh();
     onChangeComplete?.();
   }
 

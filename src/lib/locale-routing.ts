@@ -65,11 +65,11 @@ export function getLogicalPathname(pathname: string) {
   return stripLocaleFromPathname(pathname).pathname;
 }
 
-export function buildLocalizedPath(locale: Locale, pathname = "/") {
-  const logicalPathname = getLogicalPathname(pathname);
-  const prefix = `/${localeToSegment(locale)}`;
-
-  return logicalPathname === "/" ? prefix : `${prefix}${logicalPathname}`;
+// In the current deployment mode, all real routes stay unprefixed.
+// Keep this helper as the single path builder so callers do not need
+// to know whether locale prefixes are enabled or not.
+export function buildLocalizedPath(_locale: Locale, pathname = "/") {
+  return getLogicalPathname(pathname);
 }
 
 export function replaceLocaleInPathname(pathname: string, locale: Locale) {
