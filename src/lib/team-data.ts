@@ -55,22 +55,22 @@ const teamMemberDefinitions = {
     id: "ryan-z",
     name: "Ryan Z.",
     role: {
-      en: "Product Systems Lead",
-      "zh-Hant": "產品系統負責人",
-      ja: "プロダクトシステムリード"
+      en: "AI / Web3 / Cybersecurity",
+      "zh-Hant": "AI / Web3 / Cybersecurity",
+      ja: "AI / Web3 / Cybersecurity"
     },
     bio: {
       en:
-        "Ryan Z. works across product systems, AI workflow design, and structured execution. With an MBA and a Master of Cybersecurity, he focuses on systems design, operating clarity, and technically disciplined product decisions informed by security-aware thinking.",
+        "Ryan Z. holds a Master's degree in Cybersecurity and focuses on applied AI delivery, Web3 development, and system-level product building. His technical work spans intelligent workflows, frontend-backend integration, mobile development, and data security, with an emphasis on turning complex capabilities into executable, deployable, and iteratively maintainable systems.",
       "zh-Hant":
-        "Ryan Z. 專注於產品系統、AI 工作流程設計與結構化執行。具備 MBA 與資訊安全碩士背景，工作重點在系統設計、運作清晰度，以及帶有資安意識的技術型產品判斷。",
+        "Ryan Z. 具备网络安全硕士背景，专注于 AI 应用落地、Web3 开发与系统级产品构建。技术方向涵盖智能工作流、前后端集成、移动端开发与数据安全，擅长将复杂技术能力整理为可执行、可部署、可持续迭代的产品系统。",
       ja:
-        "Ryan Z. はプロダクトシステム、AI ワークフロー設計、構造化された実行を担当します。MBA とサイバーセキュリティ修士の背景を持ち、システム設計、運用の明快さ、そしてセキュリティを意識した技術的なプロダクト判断に重点を置いています。"
+        "Ryan Z. はサイバーセキュリティ修士の背景を持ち、AI の実装、Web3 開発、システムレベルのプロダクト構築に取り組んでいます。技術領域はインテリジェントなワークフロー、フロントエンドとバックエンドの統合、モバイル開発、データセキュリティにまたがり、複雑な技術を実行可能でデプロイ可能、かつ継続的に改善できるシステムへ整理することを得意としています。"
     },
     tags: {
-      en: ["Product Systems", "AI Workflows", "Systems Design"],
-      "zh-Hant": ["產品系統", "AI 工作流程", "系統設計"],
-      ja: ["プロダクトシステム", "AI ワークフロー", "システム設計"]
+      en: ["AI Systems", "Web3 Development", "Cybersecurity", "iOS / Full Stack"],
+      "zh-Hant": ["AI Systems", "Web3 Development", "Cybersecurity", "iOS / Full Stack"],
+      ja: ["AI Systems", "Web3 Development", "Cybersecurity", "iOS / Full Stack"]
     }
   },
   "randy-j": {
