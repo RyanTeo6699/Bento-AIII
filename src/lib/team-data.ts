@@ -121,44 +121,40 @@ const teamMemberDefinitions = {
     id: "john-snow",
     name: "John Snow",
     role: {
-      en: "Head of Market Strategy",
-      "zh-Hant": "市場策略負責人",
-      ja: "市場戦略責任者"
+      en: "Marketing",
+      "zh-Hant": "行銷",
+      ja: "マーケティング"
     },
     bio: {
-      en:
-        "John Snow leads market strategy, brand communication, and external growth partnerships. His work focuses on shaping public understanding of the product, pacing market expansion, and advancing partnership opportunities with discipline.",
-      "zh-Hant":
-        "負責市場策略、品牌傳播與對外增長合作，聚焦於產品外部認知建立、市場擴張節奏與合作機會推進。",
-      ja:
-        "John Snow は市場戦略、ブランド発信、対外的な成長パートナーシップを担当します。プロダクトの対外認知づくり、市場拡張の進め方、提携機会の前進を着実に整える役割です。"
+      en: "Profile details coming soon.",
+      "zh-Hant": "更多資料即將更新。",
+      ja: "詳細プロフィールは近日公開予定です。"
     },
     tags: {
-      en: ["Market Strategy", "Brand Communication", "Growth Partnerships"],
-      "zh-Hant": ["市場策略", "品牌傳播", "增長合作"],
-      ja: ["市場戦略", "ブランド発信", "成長提携"]
+      en: ["Marketing", "Brand", "Growth"],
+      "zh-Hant": ["行銷", "品牌", "成長"],
+      ja: ["マーケティング", "ブランド", "成長"]
     }
   },
-  "chongyu-guo": {
-    id: "chongyu-guo",
-    name: "Chongyu Guo",
+  // Keep market-team profiles intentionally restrained until
+  // public-facing details are ready to publish.
+  "guo-ng": {
+    id: "guo-ng",
+    name: "Guo Ng",
     role: {
-      en: "Marketing Director",
-      "zh-Hant": "市場總監",
-      ja: "マーケティングディレクター"
+      en: "Marketing",
+      "zh-Hant": "行銷",
+      ja: "マーケティング"
     },
     bio: {
-      en:
-        "Leads brand communication, market development, and external partnership rhythm. The focus is on building clear market recognition, supporting early growth, and keeping Bento AIII's outward communication aligned.",
-      "zh-Hant":
-        "負責品牌傳播、市場拓展與外部合作節奏，聚焦於建立清晰的市場認知、推動早期增長，並強化 Bento AIII 對外溝通的一致性。",
-      ja:
-        "ブランド発信、市場開拓、対外連携の進行を担当します。市場認知を明確に築き、初期成長を後押しし、Bento AIII の対外コミュニケーションの一貫性を強めることに注力しています。"
+      en: "Profile details coming soon.",
+      "zh-Hant": "更多資料即將更新。",
+      ja: "詳細プロフィールは近日公開予定です。"
     },
     tags: {
-      en: ["Brand", "Outreach", "Marketing"],
-      "zh-Hant": ["品牌", "拓展", "市場"],
-      ja: ["ブランド", "アウトリーチ", "マーケティング"]
+      en: ["Marketing", "Brand", "Outreach"],
+      "zh-Hant": ["行銷", "品牌", "拓展"],
+      ja: ["マーケティング", "ブランド", "アウトリーチ"]
     }
   }
 } as const satisfies Record<string, TeamMemberDefinition>;
@@ -192,7 +188,7 @@ const teamSectionDefinitions = [
       "zh-Hant": "負責品牌傳播、市場拓展、增長合作與外部連結。",
       ja: "ブランド発信、市場開拓、成長提携、対外的な接続を担当します。"
     },
-    memberIds: ["john-snow", "chongyu-guo"]
+    memberIds: ["john-snow", "guo-ng"]
   }
 ] as const satisfies readonly TeamSectionDefinition[];
 
