@@ -55,106 +55,104 @@ const teamMemberDefinitions = {
     id: "ryan-z",
     name: "Ryan Z.",
     role: {
-      en: "Founder & Product Systems",
-      "zh-Hant": "創辦人・產品系統",
-      ja: "創業者・プロダクトシステム"
+      en: "Product Systems Lead",
+      "zh-Hant": "產品系統負責人",
+      ja: "プロダクトシステムリード"
     },
     bio: {
       en:
-        "Ryan Z. leads product direction, system framing, and the operating logic behind Bento AIII. His work centers on product definition, workflow design, information architecture, and shaping AI software into a deliverable product system.",
+        "Ryan Z. works across product systems, AI workflow design, and structured execution. With an MBA and a Master of Cybersecurity, he focuses on systems design, operating clarity, and technically disciplined product decisions informed by security-aware thinking.",
       "zh-Hant":
-        "Ryan Z. 負責 Bento AIII 的產品方向、系統框架與整體運作邏輯，重點在產品定義、流程設計、資訊架構，以及把 AI 軟體整理成真正可交付的產品系統。",
+        "Ryan Z. 專注於產品系統、AI 工作流程設計與結構化執行。具備 MBA 與資訊安全碩士背景，工作重點在系統設計、運作清晰度，以及帶有資安意識的技術型產品判斷。",
       ja:
-        "Ryan Z. は Bento AIII のプロダクト方針、システムの枠組み、運用ロジックを担当します。主な役割は、プロダクト定義、ワークフロー設計、情報設計、そして AI ソフトウェアを実際に届けられる形へ整えることです。"
+        "Ryan Z. はプロダクトシステム、AI ワークフロー設計、構造化された実行を担当します。MBA とサイバーセキュリティ修士の背景を持ち、システム設計、運用の明快さ、そしてセキュリティを意識した技術的なプロダクト判断に重点を置いています。"
     },
     tags: {
-      en: ["Product Systems", "Strategy", "Workflow Design"],
-      "zh-Hant": ["產品系統", "策略", "流程設計"],
-      ja: ["プロダクトシステム", "戦略", "ワークフロー設計"]
+      en: ["Product Systems", "AI Workflows", "Systems Design"],
+      "zh-Hant": ["產品系統", "AI 工作流程", "系統設計"],
+      ja: ["プロダクトシステム", "AI ワークフロー", "システム設計"]
     }
   },
   "randy-j": {
     id: "randy-j",
     name: "Randy J.",
     role: {
-      en: "Product Engineer",
-      "zh-Hant": "產品工程師",
-      ja: "プロダクトエンジニア"
+      en: "Systems Engineer",
+      "zh-Hant": "系統工程師",
+      ja: "システムエンジニア"
     },
     bio: {
       en:
-        "Randy J. focuses on engineering delivery across frontend, backend, deployment, and integration work. He translates product direction into stable implementation choices, working systems, and a clean shipping path.",
+        "Randy J. brings more than a decade of software engineering experience across distributed systems, cloud infrastructure, ERP and web applications, and IoT platforms. His work spans AWS-backed production environments, large-scale system integration, and high-throughput engineering where reliability, performance, and operational scale all matter.",
       "zh-Hant":
-        "Randy J. 專注於前後端實作、部署與系統整合等工程交付，負責把產品方向轉成可運作的系統，並維持清楚、可落地的實作路徑。",
+        "Randy J. 擁有超過十年的軟體工程經驗，長期處理分散式系統、雲端基礎設施、ERP 與 Web 應用，以及 IoT 平台。其工作涵蓋 AWS 生產環境、大規模系統整合與高吞吐工程，重點放在可靠性、效能與實際運作規模。",
       ja:
-        "Randy J. はフロントエンド、バックエンド、デプロイ、システム統合を含む実装デリバリーを担当します。プロダクトの方向性を、実際に動くシステムと安定したリリース経路へ落とし込みます。"
+        "Randy J. は 10 年を超えるソフトウェア開発経験を持ち、分散システム、クラウド基盤、ERP / Web アプリケーション、IoT プラットフォームに携わってきました。AWS を含む本番環境、大規模なシステム統合、高スループットな実装を扱い、信頼性、性能、運用規模を重視します。"
     },
     tags: {
-      en: ["Full Stack", "Infrastructure", "Shipping"],
-      "zh-Hant": ["全端開發", "基礎設施", "工程交付"],
-      ja: ["フルスタック", "インフラ", "実装と出荷"]
+      en: ["Distributed Systems", "Cloud Infrastructure", "IoT Systems"],
+      "zh-Hant": ["分散式系統", "雲端基礎設施", "IoT 系統"],
+      ja: ["分散システム", "クラウド基盤", "IoT システム"]
     }
   },
   "jason-n": {
     id: "jason-n",
     name: "Jason N.",
     role: {
-      en: "Applied AI Engineer",
-      "zh-Hant": "應用 AI 工程師",
-      ja: "応用 AI エンジニア"
+      en: "AI Engineer",
+      "zh-Hant": "AI 工程師",
+      ja: "AI エンジニア"
     },
     bio: {
       en:
-        "Jason N. works across AI applications, product implementation, and system execution. He contributes to model-enabled features, application logic, and the engineering detail required to ship usable product surfaces.",
+        "Jason N. works across AI engineering, full-stack product build, and production-minded system implementation. His focus includes multi-agent LLM workflows, RAG and LLM operations, and the engineering detail needed to ship high-concurrency systems as usable product surfaces.",
       "zh-Hant":
-        "Jason N. 參與 AI 應用開發、產品實作與系統執行，主要投入模型功能落地、應用邏輯，以及讓產品真正可用的工程細節。",
+        "Jason N. 專注於 AI 工程、全端產品建置與面向正式運作的系統實作，重點涵蓋 multi-agent LLM 流程、RAG / LLM Ops，以及把高併發系統落成可用產品介面的工程細節。",
       ja:
-        "Jason N. は AI アプリケーション開発、プロダクト実装、システム実行を横断して担当します。モデル機能、アプリケーションロジック、実用的な画面を出荷するための技術細部に関わります。"
+        "Jason N. は AI エンジニアリング、フルスタックなプロダクト実装、本番運用を見据えたシステム開発を担当します。マルチエージェント LLM ワークフロー、RAG / LLM Ops、高並行システムを実用的なプロダクト画面として仕上げる技術詳細に注力しています。"
     },
     tags: {
-      en: ["Applied AI", "Product Build", "System Execution"],
-      "zh-Hant": ["應用 AI", "產品建置", "系統執行"],
-      ja: ["応用 AI", "プロダクト実装", "システム実行"]
+      en: ["AI Engineering", "RAG / LLM Ops", "Production Systems"],
+      "zh-Hant": ["AI 工程", "RAG / LLM Ops", "生產系統"],
+      ja: ["AI エンジニアリング", "RAG / LLM Ops", "本番システム"]
     }
   },
   "john-snow": {
     id: "john-snow",
     name: "John Snow",
     role: {
-      en: "Marketing",
-      "zh-Hant": "行銷",
-      ja: "マーケティング"
+      en: "Digital Marketing",
+      "zh-Hant": "數位行銷",
+      ja: "デジタルマーケティング"
     },
     bio: {
-      en: "Profile details coming soon.",
-      "zh-Hant": "更多資料即將更新。",
-      ja: "詳細プロフィールは近日公開予定です。"
+      en: "John Snow supports digital marketing, campaign coordination, market outreach, and audience-facing content work. His role is centered on helping communication stay organized, consistent, and useful across external growth efforts.",
+      "zh-Hant": "John Snow 參與數位行銷、活動協調、市場拓展與對外內容支援，工作重點在讓外部溝通、受眾接觸與增長推進保持清楚且有一致性。",
+      ja: "John Snow はデジタルマーケティング、キャンペーン調整、市場向けアウトリーチ、対外コンテンツ支援を担当します。外向きのコミュニケーションと成長施策を整理し、一貫性のある形で進める役割です。"
     },
     tags: {
-      en: ["Marketing", "Brand", "Growth"],
-      "zh-Hant": ["行銷", "品牌", "成長"],
-      ja: ["マーケティング", "ブランド", "成長"]
+      en: ["Campaigns", "Outreach", "Audience Growth"],
+      "zh-Hant": ["活動協調", "市場拓展", "受眾增長"],
+      ja: ["キャンペーン", "アウトリーチ", "オーディエンス成長"]
     }
   },
-  // Keep market-team profiles intentionally restrained until
-  // public-facing details are ready to publish.
   "guo-ng": {
     id: "guo-ng",
-    name: "Guo Ng",
+    name: "C.Y Guo",
     role: {
-      en: "Marketing",
-      "zh-Hant": "行銷",
-      ja: "マーケティング"
+      en: "Brand & Marketing",
+      "zh-Hant": "品牌與行銷",
+      ja: "ブランド・マーケティング"
     },
     bio: {
-      en: "Profile details coming soon.",
-      "zh-Hant": "更多資料即將更新。",
-      ja: "詳細プロフィールは近日公開予定です。"
+      en: "C.Y Guo works across brand promotion, brand communication, campaign support, and market-facing coordination. The role focuses on strengthening positioning clarity and keeping multi-channel communication aligned across outward-facing work.",
+      "zh-Hant": "C.Y Guo 參與品牌推廣、品牌傳播、活動支援與市場協調，重點在強化定位清晰度，並讓多渠道對外溝通保持一致。",
+      ja: "C.Y Guo はブランドプロモーション、ブランド発信、キャンペーン支援、市場向け調整に携わります。ポジショニングの明確さを保ち、複数チャネルの対外コミュニケーションを揃えることに重点を置いています。"
     },
     tags: {
-      en: ["Marketing", "Brand", "Outreach"],
-      "zh-Hant": ["行銷", "品牌", "拓展"],
-      ja: ["マーケティング", "ブランド", "アウトリーチ"]
+      en: ["Brand Promotion", "Communications", "Marketing Coordination"],
+      "zh-Hant": ["品牌推廣", "品牌傳播", "行銷協調"],
+      ja: ["ブランド推進", "ブランド発信", "マーケティング調整"]
     }
   }
 } as const satisfies Record<string, TeamMemberDefinition>;
