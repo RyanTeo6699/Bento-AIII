@@ -15,7 +15,7 @@ function pick<T>(value: Record<Locale, T>, locale: Locale): T {
   return value[locale];
 }
 
-const teamDefinitions = [
+const publishedTeamDefinitions = [
   {
     id: "ryan-z",
     name: "Ryan Z.",
@@ -123,7 +123,7 @@ const teamDefinitions = [
 ] as const;
 
 export function getTeamMembers(locale: Locale): TeamMember[] {
-  return teamDefinitions.map((member) => ({
+  return publishedTeamDefinitions.map((member) => ({
     id: member.id,
     name: member.name,
     role: pick(member.role, locale),

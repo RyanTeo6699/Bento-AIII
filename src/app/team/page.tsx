@@ -25,7 +25,7 @@ export function generateMetadata(): Metadata {
 export default function TeamPage() {
   const locale = getCurrentLocale();
   const dictionary = getDictionary(locale);
-  const teamMembers = getTeamMembers(locale).slice(0, 5);
+  const teamMembers = getTeamMembers(locale);
 
   return (
     <>
