@@ -5,10 +5,15 @@ import { Reveal } from "@/components/motion/reveal";
 import { PageHero } from "@/components/page-hero";
 import { ProjectCard } from "@/components/project-card";
 import { SectionHeading } from "@/components/section-heading";
+import { getSharedCtas } from "@/lib/cta";
 import { getCurrentLocale } from "@/lib/get-locale";
 import { getDictionary } from "@/lib/i18n";
 import { createPageMetadata } from "@/lib/metadata";
-import { getCompanyProfile, getProjects } from "@/lib/site-data";
+import {
+  getProjectPresentationCopy,
+  getProjects as getCommercialProjects
+} from "@/lib/project-commercial";
+import { getCompanyProfile } from "@/lib/site-data";
 
 export function generateMetadata(): Metadata {
   const locale = getCurrentLocale();
@@ -25,8 +30,10 @@ export function generateMetadata(): Metadata {
 export default function ProjectsPage() {
   const locale = getCurrentLocale();
   const dictionary = getDictionary(locale);
+  const sharedCtas = getSharedCtas(locale);
+  const projectPresentationCopy = getProjectPresentationCopy(locale);
   const companyProfile = getCompanyProfile(locale);
-  const projects = getProjects(locale);
+  const projects = getCommercialProjects(locale);
 
   const stageSummary = [
     {
@@ -96,7 +103,18 @@ export default function ProjectsPage() {
           <div className="mt-12 grid gap-6 xl:grid-cols-3">
             {projects.map((project, index) => (
               <Reveal key={project.slug} delay={0.04 * index}>
-                <ProjectCard project={project} copy={dictionary.common} />
+                <ProjectCard
+                  locale={locale}
+                  project={project}
+                  copy={{
+                    viewDetail: dictionary.common.viewDetail,
+                    idealUsers: projectPresentationCopy.idealUsers,
+                    deliveryScope: projectPresentationCopy.deliveryScope,
+                    keyOutcome: projectPresentationCopy.keyOutcome,
+                    valueCase: projectPresentationCopy.valueCase,
+                    statusLabels: dictionary.common.statusLabels
+                  }}
+                />
               </Reveal>
             ))}
           </div>
@@ -129,12 +147,13 @@ export default function ProjectsPage() {
       </section>
 
       <FinalCta
+        locale={locale}
         eyebrow={dictionary.projects.finalCta.eyebrow}
         title={dictionary.projects.finalCta.title}
         description={dictionary.projects.finalCta.description}
-        primaryLabel={dictionary.projects.finalCta.primaryLabel}
+        primaryLabel={sharedCtas.startConversation}
         primaryHref="/contact"
-        secondaryLabel={dictionary.projects.finalCta.secondaryLabel}
+        secondaryLabel={sharedCtas.aboutCompany}
         secondaryHref="/about"
       />
     </>

@@ -6,10 +6,17 @@ import { FinalCta } from "@/components/final-cta";
 import { Reveal } from "@/components/motion/reveal";
 import { ProjectCard } from "@/components/project-card";
 import { StatusBadge } from "@/components/status-badge";
+import { getSharedCtas } from "@/lib/cta";
 import { getCurrentLocale } from "@/lib/get-locale";
 import { getDictionary } from "@/lib/i18n";
+import { buildLocalizedPath } from "@/lib/locale-routing";
 import { createPageMetadata } from "@/lib/metadata";
-import { getProjectSlugs, getProjects } from "@/lib/site-data";
+import {
+  getProjectBySlug,
+  getProjectPresentationCopy,
+  getProjectSlugs,
+  getProjects
+} from "@/lib/project-commercial";
 
 type ProjectDetailPageProps = {
   params: {
@@ -26,7 +33,7 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: ProjectDetailPageProps): Metadata {
   const locale = getCurrentLocale();
   const dictionary = getDictionary(locale);
-  const project = getProjects(locale).find((entry) => entry.slug === params.slug);
+  const project = getProjectBySlug(locale, params.slug);
 
   if (!project) {
     return createPageMetadata({
@@ -48,8 +55,10 @@ export function generateMetadata({ params }: ProjectDetailPageProps): Metadata {
 export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   const locale = getCurrentLocale();
   const dictionary = getDictionary(locale);
+  const sharedCtas = getSharedCtas(locale);
+  const projectPresentationCopy = getProjectPresentationCopy(locale);
   const projects = getProjects(locale);
-  const project = projects.find((entry) => entry.slug === params.slug);
+  const project = getProjectBySlug(locale, params.slug);
 
   if (!project) {
     notFound();
@@ -63,7 +72,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_20%,rgba(46,232,255,0.16),transparent_24%),radial-gradient(circle_at_86%_18%,rgba(139,96,255,0.12),transparent_20%)]" />
         <div className="shell relative pb-16 pt-8">
           <Link
-            href="/projects"
+            href={buildLocalizedPath(locale, "/projects")}
             className="section-kicker inline-flex items-center gap-2 text-accent hover:opacity-100"
           >
             {dictionary.common.backToProjects}
@@ -103,20 +112,34 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
       <section className="py-24">
         <div className="shell grid gap-6 lg:grid-cols-[0.8fr_1.2fr]">
           <Reveal className="surface pixel-corner p-8">
-            <span className="section-kicker">{dictionary.common.outcome}</span>
+            <span className="section-kicker">{projectPresentationCopy.keyOutcome}</span>
             <p className="mt-4 text-lg leading-8 text-slate-200">{project.outcome}</p>
+
+            <div className="mt-8 border-t border-white/10 pt-6">
+              <p className="neo-microcopy">{projectPresentationCopy.idealUsers}</p>
+              <p className="mt-3 text-sm leading-7 text-slate-300">
+                {project.commercial.idealUsers}
+              </p>
+            </div>
+
+            <div className="mt-8 border-t border-white/10 pt-6">
+              <p className="neo-microcopy">{projectPresentationCopy.deliveryScope}</p>
+              <p className="mt-3 text-sm leading-7 text-slate-300">
+                {project.commercial.deliveryScope}
+              </p>
+            </div>
+
+            <div className="mt-8 border-t border-white/10 pt-6">
+              <p className="neo-microcopy">{projectPresentationCopy.valueCase}</p>
+              <p className="mt-3 text-sm leading-7 text-slate-400">
+                {project.commercial.valueCase}
+              </p>
+            </div>
 
             <div className="mt-8 border-t border-white/10 pt-6">
               <p className="neo-microcopy">{dictionary.common.stage}</p>
               <p className="mt-3 text-sm leading-7 text-slate-300">
                 {project.detail.stage}
-              </p>
-            </div>
-
-            <div className="mt-8 border-t border-white/10 pt-6">
-              <p className="neo-microcopy">{dictionary.common.currentFocus}</p>
-              <p className="mt-3 text-sm leading-7 text-slate-400">
-                {project.detail.currentFocus}
               </p>
             </div>
 
@@ -130,20 +153,34 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
 
           <div className="grid gap-6">
             <Reveal delay={0.05} className="surface pixel-corner p-8">
+              <span className="section-kicker">{projectPresentationCopy.operationalProblem}</span>
+              <p className="mt-4 text-base leading-8 text-slate-300">
+                {project.commercial.operationalProblem}
+              </p>
+            </Reveal>
+
+            <Reveal delay={0.1} className="surface pixel-corner p-8">
               <span className="section-kicker">{dictionary.common.problem}</span>
               <p className="mt-4 text-base leading-8 text-slate-300">
                 {project.detail.problem}
               </p>
             </Reveal>
 
-            <Reveal delay={0.1} className="surface pixel-corner p-8">
+            <Reveal delay={0.15} className="surface pixel-corner p-8">
               <span className="section-kicker">{dictionary.common.system}</span>
               <p className="mt-4 text-base leading-8 text-slate-300">
                 {project.detail.system}
               </p>
             </Reveal>
 
-            <Reveal delay={0.15} className="surface pixel-corner p-8">
+            <Reveal delay={0.2} className="surface pixel-corner p-8">
+              <span className="section-kicker">{dictionary.common.currentFocus}</span>
+              <p className="mt-4 text-base leading-8 text-slate-300">
+                {project.detail.currentFocus}
+              </p>
+            </Reveal>
+
+            <Reveal delay={0.25} className="surface pixel-corner p-8">
               <span className="section-kicker">{dictionary.common.architecture}</span>
               <div className="mt-5 space-y-4">
                 {project.detail.architecture.map((item) => (
@@ -172,7 +209,18 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
           <div className="mt-12 grid gap-6 lg:grid-cols-2">
             {related.map((entry, index) => (
               <Reveal key={entry.slug} delay={0.06 * index}>
-                <ProjectCard project={entry} copy={dictionary.common} />
+                <ProjectCard
+                  locale={locale}
+                  project={entry}
+                  copy={{
+                    viewDetail: dictionary.common.viewDetail,
+                    idealUsers: projectPresentationCopy.idealUsers,
+                    deliveryScope: projectPresentationCopy.deliveryScope,
+                    keyOutcome: projectPresentationCopy.keyOutcome,
+                    valueCase: projectPresentationCopy.valueCase,
+                    statusLabels: dictionary.common.statusLabels
+                  }}
+                />
               </Reveal>
             ))}
           </div>
@@ -180,12 +228,13 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
       </section>
 
       <FinalCta
+        locale={locale}
         eyebrow={dictionary.common.nextStep}
         title={dictionary.projects.detail.finalCta.title}
         description={dictionary.projects.detail.finalCta.description}
-        primaryLabel={dictionary.projects.detail.finalCta.primaryLabel}
+        primaryLabel={sharedCtas.startConversation}
         primaryHref="/contact"
-        secondaryLabel={dictionary.projects.detail.finalCta.secondaryLabel}
+        secondaryLabel={sharedCtas.viewProjects}
         secondaryHref="/projects"
       />
     </>

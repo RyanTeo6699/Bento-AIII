@@ -7,14 +7,16 @@ import { Reveal } from "@/components/motion/reveal";
 import { ProjectCard } from "@/components/project-card";
 import { SectionHeading } from "@/components/section-heading";
 import { TeamCard } from "@/components/team-card";
+import { getSharedCtas } from "@/lib/cta";
 import { getCurrentLocale } from "@/lib/get-locale";
 import { getDictionary } from "@/lib/i18n";
+import { buildLocalizedPath } from "@/lib/locale-routing";
 import { createPageMetadata } from "@/lib/metadata";
-import { getTeamMembers } from "@/lib/team-data";
+import { getProjectPresentationCopy, getProjects as getCommercialProjects } from "@/lib/project-commercial";
+import { getFeaturedTeamMembers, getTeamPageCopy } from "@/lib/team-data";
 import {
   getCapabilityPillars,
-  getCompanyProfile,
-  getProjects
+  getCompanyProfile
 } from "@/lib/site-data";
 
 export function generateMetadata(): Metadata {
@@ -23,6 +25,12 @@ export function generateMetadata(): Metadata {
 
   return createPageMetadata({
     locale,
+    title:
+      locale === "en"
+        ? "AI Applications & LLM Systems"
+        : locale === "zh-Hant"
+          ? "AI 應用與 LLM 系統"
+          : "AI アプリケーションと LLM システム",
     description: companyProfile.positioning,
     path: "/"
   });
@@ -31,10 +39,13 @@ export function generateMetadata(): Metadata {
 export default function HomePage() {
   const locale = getCurrentLocale();
   const dictionary = getDictionary(locale);
+  const sharedCtas = getSharedCtas(locale);
+  const projectPresentationCopy = getProjectPresentationCopy(locale);
+  const teamCopy = getTeamPageCopy(locale);
   const companyProfile = getCompanyProfile(locale);
   const capabilityPillars = getCapabilityPillars(locale);
-  const featuredProjects = getProjects(locale).filter((project) => project.featured);
-  const featuredMembers = getTeamMembers(locale).slice(0, 3);
+  const featuredProjects = getCommercialProjects(locale).filter((project) => project.featured);
+  const featuredMembers = getFeaturedTeamMembers(locale);
 
   return (
     <>
@@ -70,11 +81,11 @@ export default function HomePage() {
             </Reveal>
 
             <Reveal delay={0.1} className="mt-8 flex flex-wrap gap-4">
-              <Link href="/contact" className="button-primary">
-                {dictionary.home.hero.ctaPrimary}
+              <Link href={buildLocalizedPath(locale, "/contact")} className="button-primary">
+                {sharedCtas.startConversation}
               </Link>
-              <Link href="/projects" className="button-secondary">
-                {dictionary.home.hero.ctaSecondary}
+              <Link href={buildLocalizedPath(locale, "/projects")} className="button-secondary">
+                {sharedCtas.viewProjects}
               </Link>
             </Reveal>
 
@@ -183,8 +194,8 @@ export default function HomePage() {
               />
             </Reveal>
             <Reveal delay={0.08}>
-              <Link href="/projects" className="button-secondary">
-                {dictionary.home.projects.cta}
+              <Link href={buildLocalizedPath(locale, "/projects")} className="button-secondary">
+                {sharedCtas.viewProjects}
               </Link>
             </Reveal>
           </div>
@@ -192,7 +203,18 @@ export default function HomePage() {
           <div className="mt-12 grid gap-6 lg:grid-cols-3">
             {featuredProjects.map((project, index) => (
               <Reveal key={project.slug} delay={0.06 * index}>
-                <ProjectCard project={project} copy={dictionary.common} />
+                <ProjectCard
+                  locale={locale}
+                  project={project}
+                  copy={{
+                    viewDetail: dictionary.common.viewDetail,
+                    idealUsers: projectPresentationCopy.idealUsers,
+                    deliveryScope: projectPresentationCopy.deliveryScope,
+                    keyOutcome: projectPresentationCopy.keyOutcome,
+                    valueCase: projectPresentationCopy.valueCase,
+                    statusLabels: dictionary.common.statusLabels
+                  }}
+                />
               </Reveal>
             ))}
           </div>
@@ -205,13 +227,13 @@ export default function HomePage() {
             <Reveal>
               <SectionHeading
                 eyebrow={dictionary.home.team.eyebrow}
-                title={dictionary.home.team.title}
-                description={dictionary.home.team.description}
+                title={teamCopy.homeTitle}
+                description={teamCopy.homeDescription}
               />
             </Reveal>
             <Reveal delay={0.08}>
-              <Link href="/team" className="button-secondary">
-                {dictionary.home.team.cta}
+              <Link href={buildLocalizedPath(locale, "/team")} className="button-secondary">
+                {sharedCtas.viewTeam}
               </Link>
             </Reveal>
           </div>
@@ -227,13 +249,14 @@ export default function HomePage() {
       </section>
 
       <FinalCta
+        locale={locale}
         eyebrow={dictionary.home.finalCta.eyebrow}
         title={dictionary.home.finalCta.title}
         description={dictionary.home.finalCta.description}
-        primaryLabel={dictionary.home.finalCta.primaryLabel}
+        primaryLabel={sharedCtas.startConversation}
         primaryHref="/contact"
-        secondaryLabel={dictionary.home.finalCta.secondaryLabel}
-        secondaryHref="/about"
+        secondaryLabel={sharedCtas.viewProjects}
+        secondaryHref="/projects"
       />
     </>
   );

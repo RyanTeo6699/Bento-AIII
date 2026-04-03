@@ -1,8 +1,10 @@
 import Link from "next/link";
 
-import type { NavItem } from "@/lib/i18n";
+import type { Locale, NavItem } from "@/lib/i18n";
+import { buildLocalizedPath } from "@/lib/locale-routing";
 
 type SiteFooterProps = {
+  locale: Locale;
   navItems: NavItem[];
   copy: {
     tagline: string;
@@ -21,6 +23,7 @@ type SiteFooterProps = {
 };
 
 export function SiteFooter({
+  locale,
   navItems,
   copy,
   companyDescription,
@@ -56,7 +59,7 @@ export function SiteFooter({
                 <h2 className="text-2xl font-semibold text-white">{copy.title}</h2>
                 <p className="text-sm leading-7 text-slate-400">{companyDescription}</p>
                 <Link
-                  href="/contact"
+                  href={buildLocalizedPath(locale, "/contact")}
                   className="button-secondary inline-flex w-full max-w-full justify-center text-center sm:w-auto"
                 >
                   {copy.cta}
@@ -72,7 +75,7 @@ export function SiteFooter({
                 {navItems.map((item) => (
                   <Link
                     key={item.href}
-                    href={item.href}
+                    href={buildLocalizedPath(locale, item.href)}
                     className="block break-words text-sm text-slate-300 hover:text-white"
                   >
                     {item.label}

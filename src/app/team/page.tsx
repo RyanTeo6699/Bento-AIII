@@ -5,19 +5,21 @@ import { Reveal } from "@/components/motion/reveal";
 import { PageHero } from "@/components/page-hero";
 import { SectionHeading } from "@/components/section-heading";
 import { TeamCard } from "@/components/team-card";
+import { getSharedCtas } from "@/lib/cta";
 import { getCurrentLocale } from "@/lib/get-locale";
 import { getDictionary } from "@/lib/i18n";
 import { createPageMetadata } from "@/lib/metadata";
-import { getTeamMembers } from "@/lib/team-data";
+import { getTeamPageCopy, getTeamSections } from "@/lib/team-data";
 
 export function generateMetadata(): Metadata {
   const locale = getCurrentLocale();
   const dictionary = getDictionary(locale);
+  const teamCopy = getTeamPageCopy(locale);
 
   return createPageMetadata({
     locale,
     title: dictionary.nav.find((item) => item.href === "/team")?.label ?? "Team",
-    description: dictionary.team.hero.description,
+    description: teamCopy.pageDescription,
     path: "/team"
   });
 }
@@ -25,15 +27,17 @@ export function generateMetadata(): Metadata {
 export default function TeamPage() {
   const locale = getCurrentLocale();
   const dictionary = getDictionary(locale);
-  const teamMembers = getTeamMembers(locale);
+  const sharedCtas = getSharedCtas(locale);
+  const teamCopy = getTeamPageCopy(locale);
+  const teamSections = getTeamSections(locale);
 
   return (
     <>
       <PageHero
         eyebrow={dictionary.team.hero.eyebrow}
-        title={dictionary.team.hero.title}
-        description={dictionary.team.hero.description}
-        metrics={dictionary.team.hero.metrics}
+        title={teamCopy.pageTitle}
+        description={teamCopy.pageDescription}
+        metrics={teamCopy.metrics}
       />
 
       <section className="py-24">
@@ -41,8 +45,8 @@ export default function TeamPage() {
           <Reveal>
             <SectionHeading
               eyebrow={dictionary.team.overview.eyebrow}
-              title={dictionary.team.overview.title}
-              description={dictionary.team.overview.description}
+              title={teamCopy.overviewTitle}
+              description={teamCopy.overviewDescription}
             />
           </Reveal>
 
@@ -55,11 +59,43 @@ export default function TeamPage() {
             </p>
           </div>
 
-          <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {teamMembers.map((member, index) => (
-              <Reveal key={member.id} delay={0.05 * index}>
-                <TeamCard member={member} />
-              </Reveal>
+          <div className="mt-14 space-y-16">
+            {teamSections.map((section, sectionIndex) => (
+              <div
+                key={section.id}
+                className={
+                  sectionIndex === 0 ? "" : "border-t border-white/10 pt-16"
+                }
+              >
+                <Reveal>
+                  <div className="max-w-3xl space-y-4">
+                    <div className="flex items-center gap-3">
+                      <span className="section-kicker text-accent">
+                        0{sectionIndex + 1}
+                      </span>
+                      <span className="hud-line max-w-xs" />
+                    </div>
+                    <h2 className="text-3xl font-semibold text-white md:text-4xl">
+                      {section.title}
+                    </h2>
+                    <p className="text-base leading-8 text-slate-400">
+                      {section.subtitle}
+                    </p>
+                  </div>
+                </Reveal>
+
+                <div
+                  className={`mt-10 grid gap-6 md:grid-cols-2 ${
+                    section.members.length === 2 ? "xl:grid-cols-2" : "xl:grid-cols-3"
+                  }`}
+                >
+                  {section.members.map((member, memberIndex) => (
+                    <Reveal key={member.id} delay={0.05 * memberIndex}>
+                      <TeamCard member={member} />
+                    </Reveal>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         </div>
@@ -115,12 +151,13 @@ export default function TeamPage() {
       </section>
 
       <FinalCta
+        locale={locale}
         eyebrow={dictionary.team.finalCta.eyebrow}
         title={dictionary.team.finalCta.title}
         description={dictionary.team.finalCta.description}
-        primaryLabel={dictionary.team.finalCta.primaryLabel}
+        primaryLabel={sharedCtas.startConversation}
         primaryHref="/contact"
-        secondaryLabel={dictionary.team.finalCta.secondaryLabel}
+        secondaryLabel={sharedCtas.viewProjects}
         secondaryHref="/projects"
       />
     </>

@@ -1,12 +1,13 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import {
   localeCookieName,
   localeOptions,
   type Locale
 } from "@/lib/i18n";
+import { replaceLocaleInPathname } from "@/lib/locale-routing";
 import { cn } from "@/lib/utils";
 
 type LanguageSwitcherProps = {
@@ -14,14 +15,17 @@ type LanguageSwitcherProps = {
   label: string;
   className?: string;
   stacked?: boolean;
+  onChangeComplete?: () => void;
 };
 
 export function LanguageSwitcher({
   locale,
   label,
   className,
-  stacked = false
+  stacked = false,
+  onChangeComplete
 }: LanguageSwitcherProps) {
+  const pathname = usePathname();
   const router = useRouter();
 
   function handleLocaleChange(nextLocale: Locale) {
@@ -32,7 +36,8 @@ export function LanguageSwitcher({
     document.cookie = `${localeCookieName}=${encodeURIComponent(
       nextLocale
     )}; path=/; max-age=31536000; samesite=lax`;
-    router.refresh();
+    router.push(replaceLocaleInPathname(pathname, nextLocale));
+    onChangeComplete?.();
   }
 
   return (

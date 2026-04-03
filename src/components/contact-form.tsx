@@ -11,6 +11,7 @@ type FieldErrors = Partial<Record<FieldName, string>>;
 type FormStatus =
   | { state: "idle" }
   | { state: "loading" }
+  | { state: "notice"; message: string; reference?: string }
   | { state: "success"; message: string; reference?: string }
   | { state: "error"; message: string; reference?: string };
 
@@ -166,6 +167,7 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
         message?: string;
         error?: string;
         reference?: string;
+        deliveryMode?: "forwarded" | "logged-only";
         fieldErrors?: FieldErrors;
       };
 
@@ -181,11 +183,19 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
 
       form.reset();
       setFieldErrors({});
-      setStatus({
-        state: "success",
-        message: result.message ?? copy.statuses.submitting,
-        reference: result.reference
-      });
+      setStatus(
+        result.deliveryMode === "logged-only"
+          ? {
+              state: "notice",
+              message: result.message ?? copy.statuses.fallbackError,
+              reference: result.reference
+            }
+          : {
+              state: "success",
+              message: result.message ?? copy.statuses.submitting,
+              reference: result.reference
+            }
+      );
     } catch {
       setStatus({
         state: "error",
@@ -208,6 +218,8 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
           className={`mb-6 break-words rounded-[1rem] border px-4 py-3 text-sm ${
             status.state === "success"
               ? "border-emerald-400/30 bg-emerald-400/10 text-emerald-100"
+              : status.state === "notice"
+                ? "border-amber-300/30 bg-amber-300/10 text-amber-100"
               : status.state === "error"
                 ? "border-rose-400/30 bg-rose-400/10 text-rose-100"
                 : "border-[rgba(46,232,255,0.3)] bg-[rgba(46,232,255,0.1)] text-white"
@@ -219,8 +231,12 @@ export function ContactForm({ locale, copy }: ContactFormProps) {
               {copy.statuses.reference}: {status.reference}
             </p>
           ) : null}
-          {status.state === "success" ? (
-            <p className="mt-2 text-xs leading-6 text-emerald-100/80">
+          {status.state === "success" || status.state === "notice" ? (
+            <p
+              className={`mt-2 text-xs leading-6 ${
+                status.state === "success" ? "text-emerald-100/80" : "text-amber-100/80"
+              }`}
+            >
               {copy.statuses.successFollowUpPrefix}{" "}
               <a
                 href="mailto:hello@bentoaiii.com"

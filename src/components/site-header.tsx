@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { type Locale, type NavItem } from "@/lib/i18n";
+import { buildLocalizedPath, getLogicalPathname } from "@/lib/locale-routing";
 import { cn } from "@/lib/utils";
 
 type SiteHeaderProps = {
@@ -22,6 +23,7 @@ type SiteHeaderProps = {
 
 export function SiteHeader({ locale, navItems, copy }: SiteHeaderProps) {
   const pathname = usePathname();
+  const logicalPathname = getLogicalPathname(pathname);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -33,7 +35,7 @@ export function SiteHeader({ locale, navItems, copy }: SiteHeaderProps) {
       <div className="shell pt-4">
         <div className="surface px-4 py-3 backdrop-blur-xl">
           <div className="flex items-center justify-between gap-6">
-            <Link href="/" className="flex min-w-0 items-center gap-3">
+            <Link href={buildLocalizedPath(locale, "/")} className="flex min-w-0 items-center gap-3">
               <span className="brand-mark shrink-0">
                 <span className="brand-grid">
                   <span className="bg-accent shadow-[0_0_16px_rgba(46,232,255,0.8)]" />
@@ -56,13 +58,13 @@ export function SiteHeader({ locale, navItems, copy }: SiteHeaderProps) {
               {navItems.map((item) => {
                 const active =
                   item.href === "/"
-                    ? pathname === item.href
-                    : pathname.startsWith(item.href);
+                    ? logicalPathname === item.href
+                    : logicalPathname.startsWith(item.href);
 
                 return (
                   <Link
                     key={item.href}
-                    href={item.href}
+                    href={buildLocalizedPath(locale, item.href)}
                     className={cn(
                       "rounded-[0.9rem] px-3 py-2 text-sm transition",
                       active
@@ -78,7 +80,10 @@ export function SiteHeader({ locale, navItems, copy }: SiteHeaderProps) {
 
             <div className="hidden items-center gap-3 xl:flex">
               <LanguageSwitcher locale={locale} label={copy.languageLabel} />
-              <Link href="/contact" className="button-primary whitespace-nowrap">
+              <Link
+                href={buildLocalizedPath(locale, "/contact")}
+                className="button-primary whitespace-nowrap"
+              >
                 {copy.cta}
               </Link>
             </div>
@@ -111,13 +116,13 @@ export function SiteHeader({ locale, navItems, copy }: SiteHeaderProps) {
                   {navItems.map((item) => {
                     const active =
                       item.href === "/"
-                        ? pathname === item.href
-                        : pathname.startsWith(item.href);
+                        ? logicalPathname === item.href
+                        : logicalPathname.startsWith(item.href);
 
                     return (
                       <Link
                         key={item.href}
-                        href={item.href}
+                        href={buildLocalizedPath(locale, item.href)}
                         className={cn(
                           "block rounded-[1rem] px-4 py-3 text-sm transition",
                           active
@@ -135,10 +140,14 @@ export function SiteHeader({ locale, navItems, copy }: SiteHeaderProps) {
                       locale={locale}
                       label={copy.languageLabel}
                       stacked
+                      onChangeComplete={() => setOpen(false)}
                     />
                   </div>
 
-                  <Link href="/contact" className="button-primary mt-2 w-full">
+                  <Link
+                    href={buildLocalizedPath(locale, "/contact")}
+                    className="button-primary mt-2 w-full"
+                  >
                     {copy.cta}
                   </Link>
                 </div>

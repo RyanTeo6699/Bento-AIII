@@ -6,6 +6,9 @@ export const runtime = "nodejs";
 
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
 const RATE_LIMIT_MAX = 5;
+// This in-memory store is intentionally simple for now.
+// It only limits per server instance and should be replaced with shared storage
+// such as Redis or KV if the site needs cross-instance enforcement.
 const rateLimitStore = new Map<string, number[]>();
 
 const allowedProjectTypes = new Set([
@@ -32,6 +35,8 @@ type ContactFieldErrors = Partial<
   Record<"name" | "company" | "email" | "projectType" | "message", string>
 >;
 
+type DeliveryMode = "forwarded" | "logged-only";
+
 function readString(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
 }
@@ -52,6 +57,20 @@ function getClientIp(request: Request) {
   }
 
   return request.headers.get("x-real-ip") ?? "unknown";
+}
+
+function logContactEvent(event: string, payload: Record<string, unknown>) {
+  const serializedPayload = JSON.stringify({
+    ...payload,
+    loggedAt: new Date().toISOString()
+  });
+
+  if (event.includes("failed") || event.includes("rate_limited")) {
+    console.error(`[contact.${event}]`, serializedPayload);
+    return;
+  }
+
+  console.info(`[contact.${event}]`, serializedPayload);
 }
 
 function checkRateLimit(ip: string) {
@@ -109,7 +128,7 @@ async function forwardWithResend(payload: ContactPayload, reference: string) {
   const from = process.env.CONTACT_FROM_EMAIL;
 
   if (!apiKey || !inbox || !from) {
-    return { mode: "logged-only" as const };
+    return { mode: "logged-only" as const satisfies DeliveryMode };
   }
 
   const html = `
@@ -142,7 +161,7 @@ async function forwardWithResend(payload: ContactPayload, reference: string) {
     throw new Error(await response.text());
   }
 
-  return { mode: "forwarded" as const };
+  return { mode: "forwarded" as const satisfies DeliveryMode };
 }
 
 export async function POST(request: Request) {
@@ -177,10 +196,7 @@ export async function POST(request: Request) {
   };
 
   if (payload.website) {
-    console.warn(
-      "[contact.honeypot]",
-      JSON.stringify({ reference, clientIp, submittedAt: new Date().toISOString() })
-    );
+    logContactEvent("honeypot", { reference, clientIp });
     return NextResponse.json({
       ok: true,
       message: messages.inquiryReceived,
@@ -189,11 +205,7 @@ export async function POST(request: Request) {
   }
 
   if (!checkRateLimit(clientIp)) {
-    console.warn(
-      "[contact.rate_limited]",
-      JSON.stringify({ reference, clientIp, submittedAt: new Date().toISOString() })
-    );
-    return NextResponse.json(
+    const response = NextResponse.json(
       {
         ok: false,
         error: messages.rateLimited,
@@ -201,6 +213,10 @@ export async function POST(request: Request) {
       },
       { status: 429 }
     );
+
+    response.headers.set("Retry-After", String(Math.ceil(RATE_LIMIT_WINDOW_MS / 1000)));
+    logContactEvent("rate_limited", { reference, clientIp });
+    return response;
   }
 
   const fieldErrors = validatePayload(payload, messages);
@@ -221,50 +237,39 @@ export async function POST(request: Request) {
     );
   }
 
-  console.info(
-    "[contact.received]",
-    JSON.stringify({
-      reference,
-      clientIp,
-      projectType: payload.projectType,
-      name: payload.name,
-      company: payload.company || null,
-      email: payload.email,
-      messageLength: payload.message.length,
-      submittedAt: new Date().toISOString()
-    })
-  );
+  logContactEvent("received", {
+    reference,
+    clientIp,
+    projectType: payload.projectType,
+    name: payload.name,
+    company: payload.company || null,
+    email: payload.email,
+    messageLength: payload.message.length
+  });
 
   try {
     const delivery = await forwardWithResend(payload, reference);
 
     if (delivery.mode === "logged-only") {
-      console.info(
-        "[contact.logged_only]",
-        JSON.stringify({
-          reference,
-          clientIp,
-          reason: "missing_resend_env",
-          submittedAt: new Date().toISOString()
-        })
-      );
+      logContactEvent("logged_only", {
+        reference,
+        clientIp,
+        reason: "missing_resend_env"
+      });
 
       return NextResponse.json({
         ok: true,
         message: messages.loggedOnly,
-        reference
-      });
+        reference,
+        deliveryMode: delivery.mode
+      }, { status: 202 });
     }
   } catch (error) {
-    console.error(
-      "[contact.forward_failed]",
-      JSON.stringify({
-        reference,
-        clientIp,
-        error: error instanceof Error ? error.message : "unknown_error",
-        submittedAt: new Date().toISOString()
-      })
-    );
+    logContactEvent("forward_failed", {
+      reference,
+      clientIp,
+      error: error instanceof Error ? error.message : "unknown_error"
+    });
     return NextResponse.json(
       {
         ok: false,
@@ -278,6 +283,7 @@ export async function POST(request: Request) {
   return NextResponse.json({
     ok: true,
     message: messages.success,
-    reference
+    reference,
+    deliveryMode: "forwarded" as const satisfies DeliveryMode
   });
 }

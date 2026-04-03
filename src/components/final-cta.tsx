@@ -1,6 +1,10 @@
 import Link from "next/link";
 
+import type { Locale } from "@/lib/i18n";
+import { buildLocalizedPath } from "@/lib/locale-routing";
+
 type FinalCtaProps = {
+  locale: Locale;
   eyebrow: string;
   title: string;
   description: string;
@@ -11,6 +15,7 @@ type FinalCtaProps = {
 };
 
 export function FinalCta({
+  locale,
   eyebrow,
   title,
   description,
@@ -37,12 +42,15 @@ export function FinalCta({
           </div>
 
           <div className="mt-8 flex flex-wrap gap-4">
-            <Link href={primaryHref} className="button-primary w-full justify-center text-center sm:w-auto">
+            <Link
+              href={buildLocalizedPath(locale, primaryHref)}
+              className="button-primary w-full justify-center text-center sm:w-auto"
+            >
               {primaryLabel}
             </Link>
             {secondaryLabel && secondaryHref ? (
               <Link
-                href={secondaryHref}
+                href={buildLocalizedPath(locale, secondaryHref)}
                 className="button-secondary w-full justify-center text-center sm:w-auto"
               >
                 {secondaryLabel}

@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { getCurrentLocale } from "@/lib/get-locale";
 import { getDictionary } from "@/lib/i18n";
+import { buildLocalizedPath } from "@/lib/locale-routing";
 import { createPageMetadata } from "@/lib/metadata";
 
 export function generateMetadata(): Metadata {
@@ -33,10 +34,10 @@ export default function NotFound() {
             {dictionary.notFound.description}
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
-            <Link href="/" className="button-primary">
+            <Link href={buildLocalizedPath(locale, "/")} className="button-primary">
               {dictionary.notFound.primaryLabel}
             </Link>
-            <Link href="/projects" className="button-secondary">
+            <Link href={buildLocalizedPath(locale, "/projects")} className="button-secondary">
               {dictionary.notFound.secondaryLabel}
             </Link>
           </div>
