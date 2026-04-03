@@ -5,13 +5,18 @@ import type { Project } from "@/lib/site-data";
 
 type ProjectCardProps = {
   project: Project;
+  copy: {
+    currentFocus: string;
+    viewDetail: string;
+    statusLabels: Record<string, string>;
+  };
 };
 
-export function ProjectCard({ project }: ProjectCardProps) {
+export function ProjectCard({ project, copy }: ProjectCardProps) {
   return (
     <article className="surface pixel-corner flex h-full flex-col p-6">
       <div className="flex items-start justify-between gap-4">
-        <StatusBadge status={project.status} />
+        <StatusBadge status={project.status} label={copy.statusLabels[project.status]} />
         <span className="neo-microcopy text-right">
           {project.track}
         </span>
@@ -35,7 +40,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
       </div>
 
       <div className="mt-6 border-t border-white/10 pt-5">
-        <p className="neo-microcopy">Current focus</p>
+        <p className="neo-microcopy">{copy.currentFocus}</p>
         <p className="mt-2 text-sm leading-7 text-slate-400">
           {project.detail.currentFocus}
         </p>
@@ -44,7 +49,7 @@ export function ProjectCard({ project }: ProjectCardProps) {
 
       <div className="mt-auto pt-8">
         <Link href={`/projects/${project.slug}`} className="button-secondary">
-          View detail
+          {copy.viewDetail}
         </Link>
       </div>
     </article>

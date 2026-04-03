@@ -3,6 +3,8 @@
 import type { FormEvent } from "react";
 import { useState } from "react";
 
+import type { Locale } from "@/lib/i18n";
+
 type FieldName = "name" | "company" | "email" | "projectType" | "message";
 type FieldErrors = Partial<Record<FieldName, string>>;
 
@@ -12,16 +14,56 @@ type FormStatus =
   | { state: "success"; message: string; reference?: string }
   | { state: "error"; message: string; reference?: string };
 
+type ContactFormProps = {
+  locale: Locale;
+  copy: {
+    kicker: string;
+    title: string;
+    description: string;
+    statuses: {
+      clientValidationError: string;
+      submitting: string;
+      fallbackError: string;
+      reference: string;
+      successFollowUpPrefix: string;
+      successFollowUpLink: string;
+    };
+    labels: {
+      name: string;
+      company: string;
+      email: string;
+      projectType: string;
+      message: string;
+    };
+    placeholders: {
+      name: string;
+      company: string;
+      email: string;
+      projectType: string;
+      message: string;
+    };
+    hints: {
+      message: string;
+      range: string;
+      preferredInput: string;
+    };
+    buttons: {
+      idle: string;
+      loading: string;
+    };
+    options: Array<{ value: string; label: string }>;
+    validation: {
+      name: string;
+      email: string;
+      projectType: string;
+      company: string;
+      messageMin: string;
+      messageMax: string;
+    };
+  };
+};
+
 const initialStatus: FormStatus = { state: "idle" };
-
-const inquiryOptions = [
-  { value: "ai-application", label: "AI application" },
-  { value: "llm-system", label: "LLM system" },
-  { value: "workflow-design", label: "Workflow tooling" },
-  { value: "platform-delivery", label: "Platform delivery" },
-  { value: "advisory", label: "Scoping and advisory" }
-];
-
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function readField(formData: FormData, key: string) {
@@ -29,43 +71,7 @@ function readField(formData: FormData, key: string) {
   return typeof value === "string" ? value.trim() : "";
 }
 
-function validatePayload(payload: {
-  name: string;
-  company: string;
-  email: string;
-  projectType: string;
-  message: string;
-}) {
-  const errors: FieldErrors = {};
-
-  if (payload.name.length < 2) {
-    errors.name = "Enter a name with at least 2 characters.";
-  }
-
-  if (!emailPattern.test(payload.email)) {
-    errors.email = "Enter a valid email address.";
-  }
-
-  if (!payload.projectType) {
-    errors.projectType = "Select the inquiry type that fits best.";
-  }
-
-  if (payload.company.length > 120) {
-    errors.company = "Keep the company or team field under 120 characters.";
-  }
-
-  if (payload.message.length < 24) {
-    errors.message = "Describe the workflow or problem in at least 24 characters.";
-  }
-
-  if (payload.message.length > 2400) {
-    errors.message = "Keep the project brief under 2400 characters.";
-  }
-
-  return errors;
-}
-
-export function ContactForm() {
+export function ContactForm({ locale, copy }: ContactFormProps) {
   const [status, setStatus] = useState<FormStatus>(initialStatus);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
@@ -81,6 +87,42 @@ export function ContactForm() {
     });
   }
 
+  function validatePayload(payload: {
+    name: string;
+    company: string;
+    email: string;
+    projectType: string;
+    message: string;
+  }) {
+    const errors: FieldErrors = {};
+
+    if (payload.name.length < 2) {
+      errors.name = copy.validation.name;
+    }
+
+    if (!emailPattern.test(payload.email)) {
+      errors.email = copy.validation.email;
+    }
+
+    if (!payload.projectType) {
+      errors.projectType = copy.validation.projectType;
+    }
+
+    if (payload.company.length > 120) {
+      errors.company = copy.validation.company;
+    }
+
+    if (payload.message.length < 24) {
+      errors.message = copy.validation.messageMin;
+    }
+
+    if (payload.message.length > 2400) {
+      errors.message = copy.validation.messageMax;
+    }
+
+    return errors;
+  }
+
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -92,15 +134,17 @@ export function ContactForm() {
       email: readField(formData, "email"),
       projectType: readField(formData, "projectType"),
       message: readField(formData, "message"),
-      website: readField(formData, "website")
+      website: readField(formData, "website"),
+      locale
     };
 
     const nextFieldErrors = validatePayload(payload);
+
     if (Object.keys(nextFieldErrors).length > 0) {
       setFieldErrors(nextFieldErrors);
       setStatus({
         state: "error",
-        message: "Please correct the highlighted fields and submit again."
+        message: copy.statuses.clientValidationError
       });
       return;
     }
@@ -129,8 +173,7 @@ export function ContactForm() {
         setFieldErrors(result.fieldErrors ?? {});
         setStatus({
           state: "error",
-          message:
-            result.error ?? "The form could not be submitted. Please try again.",
+          message: result.error ?? copy.statuses.fallbackError,
           reference: result.reference
         });
         return;
@@ -140,15 +183,13 @@ export function ContactForm() {
       setFieldErrors({});
       setStatus({
         state: "success",
-        message:
-          result.message ?? "Inquiry received. Bento AIII will follow up by email.",
+        message: result.message ?? copy.statuses.submitting,
         reference: result.reference
       });
     } catch {
       setStatus({
         state: "error",
-        message:
-          "The form could not reach the site backend. Please try again or email hello@bentoaiii.com."
+        message: copy.statuses.fallbackError
       });
     }
   }
@@ -156,12 +197,9 @@ export function ContactForm() {
   return (
     <form onSubmit={handleSubmit} className="surface pixel-corner p-6 md:p-8">
       <div className="mb-8 space-y-3">
-        <span className="section-kicker">Contact form</span>
-        <h2 className="text-3xl font-semibold text-white">Tell us what needs to work.</h2>
-        <p className="text-sm leading-7 text-slate-400">
-          This form posts to the site backend. Email forwarding can be connected later
-          through Resend without changing the frontend structure.
-        </p>
+        <span className="section-kicker">{copy.kicker}</span>
+        <h2 className="text-3xl font-semibold text-white">{copy.title}</h2>
+        <p className="text-sm leading-7 text-slate-400">{copy.description}</p>
       </div>
 
       {status.state !== "idle" ? (
@@ -175,18 +213,17 @@ export function ContactForm() {
                 : "border-[rgba(46,232,255,0.3)] bg-[rgba(46,232,255,0.1)] text-white"
           }`}
         >
-          <p>{status.state === "loading" ? "Submitting inquiry..." : status.message}</p>
+          <p>{status.state === "loading" ? copy.statuses.submitting : status.message}</p>
           {"reference" in status && status.reference ? (
             <p className="mt-2 font-pixel text-[0.68rem] uppercase tracking-[0.16em]">
-              Reference: {status.reference}
+              {copy.statuses.reference}: {status.reference}
             </p>
           ) : null}
           {status.state === "success" ? (
             <p className="mt-2 text-xs leading-6 text-emerald-100/80">
-              If the request is time-sensitive, send the same reference to
-              {" "}
+              {copy.statuses.successFollowUpPrefix}{" "}
               <a href="mailto:hello@bentoaiii.com" className="underline underline-offset-4">
-                hello@bentoaiii.com
+                {copy.statuses.successFollowUpLink}
               </a>
               .
             </p>
@@ -196,12 +233,12 @@ export function ContactForm() {
 
       <div className="grid gap-5 md:grid-cols-2">
         <label className="space-y-2 text-sm text-slate-300">
-          <span>Name</span>
+          <span>{copy.labels.name}</span>
           <input
             className="form-input"
             type="text"
             name="name"
-            placeholder="Your name"
+            placeholder={copy.placeholders.name}
             minLength={2}
             maxLength={80}
             aria-invalid={Boolean(fieldErrors.name)}
@@ -212,12 +249,12 @@ export function ContactForm() {
         </label>
 
         <label className="space-y-2 text-sm text-slate-300">
-          <span>Company or team</span>
+          <span>{copy.labels.company}</span>
           <input
             className="form-input"
             type="text"
             name="company"
-            placeholder="Company or team"
+            placeholder={copy.placeholders.company}
             maxLength={120}
             aria-invalid={Boolean(fieldErrors.company)}
             onChange={() => clearFieldError("company")}
@@ -226,12 +263,12 @@ export function ContactForm() {
         </label>
 
         <label className="space-y-2 text-sm text-slate-300">
-          <span>Email</span>
+          <span>{copy.labels.email}</span>
           <input
             className="form-input"
             type="email"
             name="email"
-            placeholder="name@company.com"
+            placeholder={copy.placeholders.email}
             aria-invalid={Boolean(fieldErrors.email)}
             onChange={() => clearFieldError("email")}
             required
@@ -240,7 +277,7 @@ export function ContactForm() {
         </label>
 
         <label className="space-y-2 text-sm text-slate-300">
-          <span>Inquiry type</span>
+          <span>{copy.labels.projectType}</span>
           <select
             className="form-input"
             name="projectType"
@@ -250,9 +287,9 @@ export function ContactForm() {
             required
           >
             <option value="" disabled>
-              Select a track
+              {copy.placeholders.projectType}
             </option>
-            {inquiryOptions.map((option) => (
+            {copy.options.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
@@ -264,11 +301,11 @@ export function ContactForm() {
         </label>
 
         <label className="space-y-2 text-sm text-slate-300 md:col-span-2">
-          <span>Project brief</span>
+          <span>{copy.labels.message}</span>
           <textarea
             className="form-textarea"
             name="message"
-            placeholder="What is the workflow, team, or business problem you want to solve?"
+            placeholder={copy.placeholders.message}
             minLength={24}
             maxLength={2400}
             aria-invalid={Boolean(fieldErrors.message)}
@@ -279,11 +316,9 @@ export function ContactForm() {
             {fieldErrors.message ? (
               <p className="field-error">{fieldErrors.message}</p>
             ) : (
-              <p className="text-xs leading-5 text-slate-500">
-                Enough detail to explain the workflow, the constraint, and what needs to change.
-              </p>
+              <p className="text-xs leading-5 text-slate-500">{copy.hints.message}</p>
             )}
-            <p className="text-xs leading-5 text-slate-500">24-2400 characters</p>
+            <p className="text-xs leading-5 text-slate-500">{copy.hints.range}</p>
           </div>
         </label>
 
@@ -294,15 +329,13 @@ export function ContactForm() {
       </div>
 
       <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm text-slate-500">
-          Preferred input: a real workflow, a rough scope, or the current constraint you need to unblock.
-        </p>
+        <p className="text-sm text-slate-500">{copy.hints.preferredInput}</p>
         <button
           type="submit"
           className="button-primary"
           disabled={status.state === "loading"}
         >
-          {status.state === "loading" ? "Submitting..." : "Send inquiry"}
+          {status.state === "loading" ? copy.buttons.loading : copy.buttons.idle}
         </button>
       </div>
     </form>

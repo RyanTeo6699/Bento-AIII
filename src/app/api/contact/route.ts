@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+import { getDictionary, resolveLocale } from "@/lib/i18n";
+
 export const runtime = "nodejs";
 
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
@@ -22,6 +24,7 @@ type ContactPayload = {
   email: string;
   projectType: string;
   message: string;
+  locale?: string;
   website?: string;
 };
 
@@ -67,31 +70,34 @@ function checkRateLimit(ip: string) {
   return true;
 }
 
-function validatePayload(payload: ContactPayload) {
+function validatePayload(
+  payload: ContactPayload,
+  messages: ReturnType<typeof getDictionary>["contactForm"]["api"]
+) {
   const fieldErrors: ContactFieldErrors = {};
 
   if (payload.name.length < 2) {
-    fieldErrors.name = "Name must be at least 2 characters.";
+    fieldErrors.name = messages.name;
   }
 
   if (payload.company.length > 120) {
-    fieldErrors.company = "Company or team field is too long.";
+    fieldErrors.company = messages.company;
   }
 
   if (!emailPattern.test(payload.email)) {
-    fieldErrors.email = "A valid email address is required.";
+    fieldErrors.email = messages.email;
   }
 
   if (!allowedProjectTypes.has(payload.projectType)) {
-    fieldErrors.projectType = "Select a valid inquiry type.";
+    fieldErrors.projectType = messages.projectType;
   }
 
   if (payload.message.length < 24) {
-    fieldErrors.message = "Project brief must be at least 24 characters.";
+    fieldErrors.message = messages.messageMin;
   }
 
   if (payload.message.length > 2400) {
-    fieldErrors.message = "Project brief is too long.";
+    fieldErrors.message = messages.messageMax;
   }
 
   return fieldErrors;
@@ -148,10 +154,17 @@ export async function POST(request: Request) {
     body = (await request.json()) as Record<string, unknown>;
   } catch {
     return NextResponse.json(
-      { ok: false, error: "Invalid request payload.", reference },
+      {
+        ok: false,
+        error: getDictionary("en").contactForm.api.invalidPayload,
+        reference
+      },
       { status: 400 }
     );
   }
+
+  const locale = resolveLocale(readString(body.locale));
+  const messages = getDictionary(locale).contactForm.api;
 
   const payload: ContactPayload = {
     name: readString(body.name),
@@ -159,6 +172,7 @@ export async function POST(request: Request) {
     email: readString(body.email),
     projectType: readString(body.projectType),
     message: readString(body.message),
+    locale,
     website: readString(body.website)
   };
 
@@ -169,7 +183,7 @@ export async function POST(request: Request) {
     );
     return NextResponse.json({
       ok: true,
-      message: "Inquiry received.",
+      message: messages.inquiryReceived,
       reference
     });
   }
@@ -182,19 +196,19 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         ok: false,
-        error: "Too many inquiries from this connection. Please wait a few minutes and try again.",
+        error: messages.rateLimited,
         reference
       },
       { status: 429 }
     );
   }
 
-  const fieldErrors = validatePayload(payload);
+  const fieldErrors = validatePayload(payload, messages);
 
   if (Object.keys(fieldErrors).length > 0) {
     const firstError =
       Object.values(fieldErrors).find((value): value is string => Boolean(value)) ??
-      "Validation failed.";
+      messages.validationFailed;
 
     return NextResponse.json(
       {
@@ -237,8 +251,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json({
         ok: true,
-        message:
-          "Inquiry reached the site backend. Email forwarding is not configured yet, so also email hello@bentoaiii.com if the request is time-sensitive.",
+        message: messages.loggedOnly,
         reference
       });
     }
@@ -255,8 +268,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         ok: false,
-        error:
-          "Inquiry reached the site backend, but email forwarding is not configured correctly. Please email hello@bentoaiii.com if this continues.",
+        error: messages.forwardFailed,
         reference
       },
       { status: 502 }
@@ -265,7 +277,7 @@ export async function POST(request: Request) {
 
   return NextResponse.json({
     ok: true,
-    message: "Inquiry received. Bento AIII will review it and follow up by email.",
+    message: messages.success,
     reference
   });
 }

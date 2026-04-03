@@ -4,7 +4,9 @@ import { ContactForm } from "@/components/contact-form";
 import { Reveal } from "@/components/motion/reveal";
 import { PageHero } from "@/components/page-hero";
 import { SectionHeading } from "@/components/section-heading";
-import { contactChannels } from "@/lib/site-data";
+import { getCurrentLocale } from "@/lib/get-locale";
+import { getDictionary } from "@/lib/i18n";
+import { getContactChannels } from "@/lib/site-data";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -12,17 +14,17 @@ export const metadata: Metadata = {
 };
 
 export default function ContactPage() {
+  const locale = getCurrentLocale();
+  const dictionary = getDictionary(locale);
+  const contactChannels = getContactChannels(locale);
+
   return (
     <>
       <PageHero
-        eyebrow="Contact"
-        title="Bring the workflow, the problem, or the product direction."
-        description="Bento AIII is best engaged on practical AI product work, language model systems, internal tooling, and delivery partnerships."
-        metrics={[
-          { label: "General", value: "hello@bentoaiii.com" },
-          { label: "Response", value: "Usually within 1-2 business days" },
-          { label: "Base", value: "Edmonton, Alberta / remote" }
-        ]}
+        eyebrow={dictionary.contact.hero.eyebrow}
+        title={dictionary.contact.hero.title}
+        description={dictionary.contact.hero.description}
+        metrics={dictionary.contact.hero.metrics}
       />
 
       <section className="py-24">
@@ -30,9 +32,9 @@ export default function ContactPage() {
           <div className="space-y-6">
             <Reveal>
               <SectionHeading
-                eyebrow="Reach out"
-                title="A few ways to start the conversation."
-                description="Use the contact form for structure, or jump directly to the right channel below."
+                eyebrow={dictionary.contact.reachOut.eyebrow}
+                title={dictionary.contact.reachOut.title}
+                description={dictionary.contact.reachOut.description}
               />
             </Reveal>
 
@@ -59,36 +61,28 @@ export default function ContactPage() {
               ))}
 
               <Reveal delay={0.18} className="surface pixel-corner p-6">
-                <p className="section-kicker text-[0.58rem]">Submission path</p>
+                <p className="section-kicker text-[0.58rem]">
+                  {dictionary.contact.submissionPath.kicker}
+                </p>
                 <div className="mt-5 space-y-4">
-                  <div className="border-t border-white/10 pt-4 first:border-t-0 first:pt-0">
-                    <p className="neo-microcopy">01 Intake</p>
-                    <p className="mt-2 text-sm leading-7 text-slate-400">
-                      Submit a short brief, current workflow, or the constraint that is
-                      blocking delivery.
-                    </p>
-                  </div>
-                  <div className="border-t border-white/10 pt-4">
-                    <p className="neo-microcopy">02 Review</p>
-                    <p className="mt-2 text-sm leading-7 text-slate-400">
-                      Bento AIII reviews fit, delivery shape, and whether the problem should
-                      be treated as product, systems, or workflow work.
-                    </p>
-                  </div>
-                  <div className="border-t border-white/10 pt-4">
-                    <p className="neo-microcopy">03 Follow-up</p>
-                    <p className="mt-2 text-sm leading-7 text-slate-400">
-                      If the fit is good, the next step is a scoped conversation rather than a
-                      generic sales chain.
-                    </p>
-                  </div>
+                  {dictionary.contact.submissionPath.steps.map((step) => (
+                    <div
+                      key={step.label}
+                      className="border-t border-white/10 pt-4 first:border-t-0 first:pt-0"
+                    >
+                      <p className="neo-microcopy">{step.label}</p>
+                      <p className="mt-2 text-sm leading-7 text-slate-400">
+                        {step.body}
+                      </p>
+                    </div>
+                  ))}
                 </div>
               </Reveal>
             </div>
           </div>
 
           <Reveal delay={0.08}>
-            <ContactForm />
+            <ContactForm locale={locale} copy={dictionary.contactForm} />
           </Reveal>
         </div>
       </section>

@@ -1,10 +1,32 @@
 import Link from "next/link";
 
-import { companyProfile, contactChannels, navItems } from "@/lib/site-data";
+import type { NavItem } from "@/lib/i18n";
 
-export function SiteFooter() {
-  const emailChannel = contactChannels.find((item) => item.href?.startsWith("mailto:"));
+type SiteFooterProps = {
+  navItems: NavItem[];
+  copy: {
+    tagline: string;
+    title: string;
+    cta: string;
+    navTitle: string;
+    contactTitle: string;
+    location: string;
+    policy: string;
+    closingKicker: string;
+    closingLine: string;
+  };
+  companyDescription: string;
+  emailHref: string;
+  emailValue: string;
+};
 
+export function SiteFooter({
+  navItems,
+  copy,
+  companyDescription,
+  emailHref,
+  emailValue
+}: SiteFooterProps) {
   return (
     <footer className="border-t border-white/10 py-12">
       <div className="shell">
@@ -25,27 +47,23 @@ export function SiteFooter() {
                     Bento AIII
                   </p>
                   <p className="font-pixel text-[0.62rem] uppercase tracking-[0.22em] text-slate-500">
-                    AI applications / LLM systems
+                    {copy.tagline}
                   </p>
                 </div>
               </div>
 
               <div className="max-w-md space-y-3">
-                <h2 className="text-2xl font-semibold text-white">
-                  AI software for actual operating work.
-                </h2>
-                <p className="text-sm leading-7 text-slate-400">
-                  {companyProfile.description}
-                </p>
+                <h2 className="text-2xl font-semibold text-white">{copy.title}</h2>
+                <p className="text-sm leading-7 text-slate-400">{companyDescription}</p>
                 <Link href="/contact" className="button-secondary">
-                  Start scoped inquiry
+                  {copy.cta}
                 </Link>
               </div>
             </div>
 
             <div>
               <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">
-                Navigate
+                {copy.navTitle}
               </h3>
               <div className="space-y-3">
                 {navItems.map((item) => (
@@ -62,31 +80,23 @@ export function SiteFooter() {
 
             <div>
               <h3 className="mb-4 text-sm font-semibold uppercase tracking-[0.18em] text-slate-500">
-                Contact
+                {copy.contactTitle}
               </h3>
               <div className="space-y-3 text-sm leading-7 text-slate-300">
-                <a
-                  href={emailChannel?.href ?? "mailto:hello@bentoaiii.com"}
-                  className="block hover:text-white"
-                >
-                  {emailChannel?.value ?? "hello@bentoaiii.com"}
+                <a href={emailHref} className="block hover:text-white">
+                  {emailValue}
                 </a>
-                <p className="text-slate-400">Edmonton, Alberta / remote</p>
-                <p className="text-slate-500">
-                  Public material on the site is intentionally limited to information Bento
-                  AIII can reasonably stand behind.
-                </p>
+                <p className="text-slate-400">{copy.location}</p>
+                <p className="text-slate-500">{copy.policy}</p>
               </div>
             </div>
           </div>
 
           <div className="mt-8 flex flex-col gap-4 border-t border-white/10 pt-6 md:flex-row md:items-center md:justify-between">
             <p className="font-pixel text-[0.62rem] uppercase tracking-[0.18em] text-slate-500">
-              build the layer around the model
+              {copy.closingKicker}
             </p>
-            <p className="text-sm text-slate-500">
-              Bento AIII. Practical AI with product discipline.
-            </p>
+            <p className="text-sm text-slate-500">{copy.closingLine}</p>
           </div>
         </div>
       </div>

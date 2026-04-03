@@ -9,7 +9,13 @@ const statusStyles: Record<ProjectStatus, string> = {
   Concept: "border-amber-300/30 bg-amber-300/10 text-amber-100"
 };
 
-export function StatusBadge({ status }: { status: ProjectStatus }) {
+export function StatusBadge({
+  status,
+  label
+}: {
+  status: ProjectStatus;
+  label?: string;
+}) {
   return (
     <span
       className={cn(
@@ -17,7 +23,7 @@ export function StatusBadge({ status }: { status: ProjectStatus }) {
         statusStyles[status]
       )}
     >
-      {status}
+      {label ?? status}
     </span>
   );
 }

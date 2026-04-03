@@ -1,6 +1,4 @@
 /* VERCEL_MARKER_2026_04_02_A */
-html { outline: 0 solid transparent; }
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

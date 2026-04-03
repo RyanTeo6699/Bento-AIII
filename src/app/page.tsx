@@ -6,18 +6,23 @@ import { Reveal } from "@/components/motion/reveal";
 import { ProjectCard } from "@/components/project-card";
 import { SectionHeading } from "@/components/section-heading";
 import { TeamCard } from "@/components/team-card";
+import { getCurrentLocale } from "@/lib/get-locale";
+import { getDictionary } from "@/lib/i18n";
 import {
-  capabilityPillars,
-  companyProfile,
-  coreRoles,
-  heroSignals,
-  projects
+  getCapabilityPillars,
+  getCompanyProfile,
+  getProjects,
+  getTeamMembers
 } from "@/lib/site-data";
 
-const featuredProjects = projects.filter((project) => project.featured);
-const featuredRoles = coreRoles.slice(0, 3);
-
 export default function HomePage() {
+  const locale = getCurrentLocale();
+  const dictionary = getDictionary(locale);
+  const companyProfile = getCompanyProfile(locale);
+  const capabilityPillars = getCapabilityPillars(locale);
+  const featuredProjects = getProjects(locale).filter((project) => project.featured);
+  const featuredMembers = getTeamMembers(locale).slice(0, 3);
+
   return (
     <>
       <section className="relative overflow-hidden border-b border-white/10 pt-28">
@@ -26,38 +31,37 @@ export default function HomePage() {
           <div className="max-w-2xl">
             <Reveal className="space-y-6">
               <div className="flex items-center gap-3">
-                <span className="section-kicker">Bento AIII / AI systems company</span>
+                <span className="section-kicker">{dictionary.home.hero.kicker}</span>
                 <span className="hud-line max-w-xs" />
               </div>
 
               <div className="space-y-3">
                 <p className="font-pixel text-[0.72rem] uppercase tracking-[0.22em] text-slate-500">
-                  Edmonton / Remote
+                  {dictionary.home.hero.location}
                 </p>
                 <h1 className="text-5xl font-semibold leading-none tracking-[-0.04em] text-white md:text-[5.5rem]">
-                  Bento AIII
+                  {dictionary.home.hero.title}
                   <span className="mt-3 block text-[0.48em] font-medium tracking-[-0.03em] text-slate-200">
-                    builds the layer around the model.
+                    {dictionary.home.hero.subtitle}
                   </span>
                 </h1>
               </div>
 
               <p className="max-w-2xl text-2xl leading-tight text-slate-100 md:text-[1.95rem]">
-                AI applications, LLM systems, and workflow software for teams that need product discipline, clear review paths, and systems that hold up outside the demo.
+                {dictionary.home.hero.lead}
               </p>
 
               <p className="max-w-xl text-base leading-8 text-slate-400">
-                {companyProfile.description} Bento AIII works where product shape, system
-                behavior, and delivery constraints all need to stay in the same frame.
+                {companyProfile.description} {dictionary.home.hero.body}
               </p>
             </Reveal>
 
             <Reveal delay={0.1} className="mt-8 flex flex-wrap gap-4">
               <Link href="/contact" className="button-primary">
-                Start scoped inquiry
+                {dictionary.home.hero.ctaPrimary}
               </Link>
               <Link href="/projects" className="button-secondary">
-                See current tracks
+                {dictionary.home.hero.ctaSecondary}
               </Link>
             </Reveal>
 
@@ -65,7 +69,7 @@ export default function HomePage() {
               delay={0.16}
               className="mt-12 grid gap-4 border-t border-white/10 pt-8 sm:grid-cols-3"
             >
-              {heroSignals.map((signal) => (
+              {dictionary.home.hero.signals.map((signal) => (
                 <div key={signal.label} className="space-y-3">
                   <p className="neo-microcopy">{signal.label}</p>
                   <p className="text-sm leading-7 text-slate-300">{signal.value}</p>
@@ -75,7 +79,7 @@ export default function HomePage() {
           </div>
 
           <Reveal delay={0.12} className="lg:pl-8">
-            <HeroScene />
+            <HeroScene copy={dictionary.home.heroScene} />
           </Reveal>
         </div>
       </section>
@@ -84,30 +88,33 @@ export default function HomePage() {
         <div className="shell grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
           <Reveal>
             <SectionHeading
-              eyebrow="About"
-              title="A small company focused on practical AI delivery rather than polished case-study theater."
+              eyebrow={dictionary.home.about.eyebrow}
+              title={dictionary.home.about.title}
               description={companyProfile.description}
             />
           </Reveal>
 
           <div className="grid gap-6 md:grid-cols-2">
             <Reveal delay={0.06} className="surface pixel-corner p-6">
-              <p className="section-kicker text-[0.58rem]">Mission</p>
+              <p className="section-kicker text-[0.58rem]">
+                {dictionary.home.about.missionLabel}
+              </p>
               <p className="mt-4 text-lg leading-8 text-slate-200">
                 {companyProfile.mission}
               </p>
             </Reveal>
 
             <Reveal delay={0.12} className="surface pixel-corner p-6">
-              <p className="section-kicker text-[0.58rem]">Public material</p>
+              <p className="section-kicker text-[0.58rem]">
+                {dictionary.home.about.publicMaterialLabel}
+              </p>
               <p className="mt-4 text-sm leading-7 text-slate-300">
                 {companyProfile.disclosure}
               </p>
               <div className="mt-6 border-t border-white/10 pt-4">
-                <p className="neo-microcopy">Site policy</p>
+                <p className="neo-microcopy">{dictionary.home.about.sitePolicyLabel}</p>
                 <p className="mt-2 text-sm leading-7 text-slate-400">
-                  Project pages represent current tracks and capability areas. If a detail is
-                  not public or not yet stable, it stays out of the copy.
+                  {dictionary.home.about.sitePolicyText}
                 </p>
               </div>
             </Reveal>
@@ -119,9 +126,9 @@ export default function HomePage() {
         <div className="shell">
           <Reveal>
             <SectionHeading
-              eyebrow="Capabilities"
-              title="Core capability areas across product, system design, and delivery."
-              description="Each track is designed to support AI products that need more than a prototype. Bento AIII builds the layer around the model as carefully as the model interaction itself."
+              eyebrow={dictionary.home.capabilities.eyebrow}
+              title={dictionary.home.capabilities.title}
+              description={dictionary.home.capabilities.description}
             />
           </Reveal>
 
@@ -157,14 +164,14 @@ export default function HomePage() {
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <Reveal>
               <SectionHeading
-                eyebrow="Projects"
-                title="Current tracks across external work, internal builds, and concept studies."
-                description="The list is intentionally written as project directions rather than inflated public case studies."
+                eyebrow={dictionary.home.projects.eyebrow}
+                title={dictionary.home.projects.title}
+                description={dictionary.home.projects.description}
               />
             </Reveal>
             <Reveal delay={0.08}>
               <Link href="/projects" className="button-secondary">
-                See all tracks
+                {dictionary.home.projects.cta}
               </Link>
             </Reveal>
           </div>
@@ -172,7 +179,7 @@ export default function HomePage() {
           <div className="mt-12 grid gap-6 lg:grid-cols-3">
             {featuredProjects.map((project, index) => (
               <Reveal key={project.slug} delay={0.06 * index}>
-                <ProjectCard project={project} />
+                <ProjectCard project={project} copy={dictionary.common} />
               </Reveal>
             ))}
           </div>
@@ -184,22 +191,22 @@ export default function HomePage() {
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <Reveal>
               <SectionHeading
-                eyebrow="Core roles"
-                title="The team page stays role-based until there is public information worth publishing."
-                description="Bento AIII is intentionally small. The site shows the roles that shape delivery instead of inventing biographies and profile links."
+                eyebrow={dictionary.home.team.eyebrow}
+                title={dictionary.home.team.title}
+                description={dictionary.home.team.description}
               />
             </Reveal>
             <Reveal delay={0.08}>
               <Link href="/team" className="button-secondary">
-                View core roles
+                {dictionary.home.team.cta}
               </Link>
             </Reveal>
           </div>
 
           <div className="mt-12 grid gap-6 lg:grid-cols-3">
-            {featuredRoles.map((role, index) => (
-              <Reveal key={role.id} delay={0.06 * index}>
-                <TeamCard role={role} />
+            {featuredMembers.map((member, index) => (
+              <Reveal key={member.id} delay={0.06 * index}>
+                <TeamCard member={member} />
               </Reveal>
             ))}
           </div>
@@ -207,12 +214,12 @@ export default function HomePage() {
       </section>
 
       <FinalCta
-        eyebrow="Start"
-        title="If the workflow is real, the software around the model should be too."
-        description="Bring Bento AIII a process, internal tool, or AI product direction that needs credible scope and dependable implementation."
-        primaryLabel="Start a project inquiry"
+        eyebrow={dictionary.home.finalCta.eyebrow}
+        title={dictionary.home.finalCta.title}
+        description={dictionary.home.finalCta.description}
+        primaryLabel={dictionary.home.finalCta.primaryLabel}
         primaryHref="/contact"
-        secondaryLabel="Read the company brief"
+        secondaryLabel={dictionary.home.finalCta.secondaryLabel}
         secondaryHref="/about"
       />
     </>

@@ -4,7 +4,14 @@ import { FinalCta } from "@/components/final-cta";
 import { Reveal } from "@/components/motion/reveal";
 import { PageHero } from "@/components/page-hero";
 import { SectionHeading } from "@/components/section-heading";
-import { capabilityPillars, companyProfile, roadmap, values } from "@/lib/site-data";
+import { getCurrentLocale } from "@/lib/get-locale";
+import { getDictionary } from "@/lib/i18n";
+import {
+  getCapabilityPillars,
+  getCompanyProfile,
+  getRoadmap,
+  getValues
+} from "@/lib/site-data";
 
 export const metadata: Metadata = {
   title: "About",
@@ -12,39 +19,41 @@ export const metadata: Metadata = {
 };
 
 export default function AboutPage() {
+  const locale = getCurrentLocale();
+  const dictionary = getDictionary(locale);
+  const companyProfile = getCompanyProfile(locale);
+  const capabilityPillars = getCapabilityPillars(locale);
+  const values = getValues(locale);
+  const roadmap = getRoadmap(locale);
+
   return (
     <>
       <PageHero
-        eyebrow="About"
-        title="Bento AIII is built for practical AI delivery."
+        eyebrow={dictionary.about.hero.eyebrow}
+        title={dictionary.about.hero.title}
         description={companyProfile.positioning}
-        metrics={[
-          { label: "Company model", value: "Small AI product and systems studio" },
-          { label: "Public material", value: "Only what the company can reasonably stand behind" },
-          { label: "Working style", value: "Scoped, product-led, system-aware delivery" }
-        ]}
+        metrics={dictionary.about.hero.metrics}
       />
 
       <section className="py-24">
         <div className="shell grid gap-6 lg:grid-cols-2">
           <Reveal className="surface pixel-corner p-8">
-            <span className="section-kicker">Company brief</span>
-            <h2 className="mt-4 text-3xl font-semibold text-white">What Bento AIII does</h2>
+            <span className="section-kicker">{dictionary.about.brief.kicker}</span>
+            <h2 className="mt-4 text-3xl font-semibold text-white">
+              {dictionary.about.brief.title}
+            </h2>
             <p className="mt-5 text-base leading-8 text-slate-300">
               {companyProfile.description}
             </p>
             <p className="mt-4 text-base leading-8 text-slate-400">
-              The work focuses on AI products that have to survive contact with real data,
-              mixed stakeholders, and ordinary business constraints. That usually means
-              interface design, system architecture, prompt and retrieval behavior, and
-              rollout logic all need to be shaped together.
+              {dictionary.about.brief.body}
             </p>
           </Reveal>
 
           <Reveal delay={0.08} className="surface pixel-corner p-8">
-            <span className="section-kicker">Public information policy</span>
+            <span className="section-kicker">{dictionary.about.publicInfo.kicker}</span>
             <h2 className="mt-4 text-3xl font-semibold text-white">
-              The site stays narrower than the actual work.
+              {dictionary.about.publicInfo.title}
             </h2>
             <p className="mt-5 text-base leading-8 text-slate-300">
               {companyProfile.disclosure}
@@ -52,16 +61,15 @@ export default function AboutPage() {
             <div className="mt-8 space-y-4">
               <div className="border-t border-white/10 pt-4">
                 <p className="text-sm uppercase tracking-[0.18em] text-slate-500">
-                  Why this matters
+                  {dictionary.about.publicInfo.whyLabel}
                 </p>
                 <p className="mt-2 text-sm leading-7 text-slate-400">
-                  It is better to publish less than to make the company look larger, louder,
-                  or more deployed than it actually is today.
+                  {dictionary.about.publicInfo.whyText}
                 </p>
               </div>
               <div className="border-t border-white/10 pt-4">
                 <p className="text-sm uppercase tracking-[0.18em] text-slate-500">
-                  Mission
+                  {dictionary.about.publicInfo.missionLabel}
                 </p>
                 <p className="mt-2 text-sm leading-7 text-slate-400">
                   {companyProfile.mission}
@@ -76,9 +84,9 @@ export default function AboutPage() {
         <div className="shell">
           <Reveal>
             <SectionHeading
-              eyebrow="Business directions"
-              title="The company is organized around a few high-value build tracks."
-              description="Bento AIII stays deliberately focused: products around the model, systems behind the model, and workflows that make the result usable."
+              eyebrow={dictionary.about.businessDirections.eyebrow}
+              title={dictionary.about.businessDirections.title}
+              description={dictionary.about.businessDirections.description}
             />
           </Reveal>
 
@@ -90,7 +98,7 @@ export default function AboutPage() {
                 className="surface pixel-corner p-6"
               >
                 <p className="text-xs uppercase tracking-[0.2em] text-accent">
-                  Track 0{index + 1}
+                  {dictionary.about.businessDirections.trackPrefix} 0{index + 1}
                 </p>
                 <h3 className="mt-4 text-2xl font-semibold text-white">{pillar.title}</h3>
                 <p className="mt-4 text-sm leading-7 text-slate-400">{pillar.description}</p>
@@ -104,9 +112,9 @@ export default function AboutPage() {
         <div className="shell">
           <Reveal>
             <SectionHeading
-              eyebrow="Technical capability"
-              title="Capability is not just model access. It is the surrounding system."
-              description="Bento AIII works across product, engineering, and system operations so that AI features become stable software instead of isolated demos."
+              eyebrow={dictionary.about.technicalCapability.eyebrow}
+              title={dictionary.about.technicalCapability.title}
+              description={dictionary.about.technicalCapability.description}
             />
           </Reveal>
 
@@ -136,9 +144,9 @@ export default function AboutPage() {
         <div className="shell">
           <Reveal>
             <SectionHeading
-              eyebrow="Values"
-              title="A few principles shape how the company works."
-              description="These are the operating values behind product decisions, technical choices, and project execution."
+              eyebrow={dictionary.about.values.eyebrow}
+              title={dictionary.about.values.title}
+              description={dictionary.about.values.description}
             />
           </Reveal>
 
@@ -161,9 +169,9 @@ export default function AboutPage() {
         <div className="shell">
           <Reveal>
             <SectionHeading
-              eyebrow="Roadmap"
-              title="Current roadmap markers."
-              description="These markers are directional and operational. They are not meant to read like a fundraising deck or expansion fantasy."
+              eyebrow={dictionary.about.roadmap.eyebrow}
+              title={dictionary.about.roadmap.title}
+              description={dictionary.about.roadmap.description}
             />
           </Reveal>
 
@@ -188,12 +196,12 @@ export default function AboutPage() {
       </section>
 
       <FinalCta
-        eyebrow="Contact"
-        title="Need a company that can shape both the interface and the system?"
-        description="Bento AIII works best on projects where product clarity, technical rigor, and operational realism all matter at the same time."
-        primaryLabel="Talk to Bento AIII"
+        eyebrow={dictionary.about.finalCta.eyebrow}
+        title={dictionary.about.finalCta.title}
+        description={dictionary.about.finalCta.description}
+        primaryLabel={dictionary.about.finalCta.primaryLabel}
         primaryHref="/contact"
-        secondaryLabel="View projects"
+        secondaryLabel={dictionary.about.finalCta.secondaryLabel}
         secondaryHref="/projects"
       />
     </>

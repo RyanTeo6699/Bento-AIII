@@ -1,28 +1,89 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-import { navItems } from "@/lib/site-data";
+import {
+  localeCookieName,
+  localeOptions,
+  type Locale,
+  type NavItem
+} from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
-export function SiteHeader() {
+type SiteHeaderProps = {
+  locale: Locale;
+  navItems: NavItem[];
+  copy: {
+    brandTagline: string;
+    cta: string;
+    mobileToggleLabel: string;
+    languageLabel: string;
+  };
+};
+
+export function SiteHeader({ locale, navItems, copy }: SiteHeaderProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
     setOpen(false);
   }, [pathname]);
 
+  function handleLocaleChange(nextLocale: Locale) {
+    if (nextLocale === locale) {
+      return;
+    }
+
+    document.cookie = `${localeCookieName}=${encodeURIComponent(
+      nextLocale
+    )}; path=/; max-age=31536000; samesite=lax`;
+    setOpen(false);
+    router.refresh();
+  }
+
+  function renderLocaleSwitch(className?: string) {
+    return (
+      <div className={cn("flex items-center gap-2", className)}>
+        <span className="font-pixel text-[0.62rem] uppercase tracking-[0.18em] text-slate-500">
+          {copy.languageLabel}
+        </span>
+        <div className="flex items-center rounded-[0.95rem] border border-white/10 bg-white/[0.03] p-1">
+          {localeOptions.map((option) => {
+            const active = option.value === locale;
+
+            return (
+              <button
+                key={option.value}
+                type="button"
+                onClick={() => handleLocaleChange(option.value)}
+                className={cn(
+                  "rounded-[0.7rem] px-3 py-2 text-xs font-medium transition",
+                  active
+                    ? "bg-white/[0.08] text-white"
+                    : "text-slate-400 hover:bg-white/[0.05] hover:text-white"
+                )}
+                aria-pressed={active}
+              >
+                {option.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <header className="fixed inset-x-0 top-0 z-50">
       <div className="shell pt-4">
         <div className="surface px-4 py-3 backdrop-blur-xl">
           <div className="flex items-center justify-between gap-6">
-            <Link href="/" className="flex items-center gap-3">
-              <span className="brand-mark">
+            <Link href="/" className="flex min-w-0 items-center gap-3">
+              <span className="brand-mark shrink-0">
                 <span className="brand-grid">
                   <span className="bg-accent shadow-[0_0_16px_rgba(46,232,255,0.8)]" />
                   <span className="bg-white/15" />
@@ -30,17 +91,17 @@ export function SiteHeader() {
                   <span className="bg-violet" />
                 </span>
               </span>
-              <div className="flex flex-col">
-                <span className="text-sm font-semibold tracking-[0.14em] text-white">
+              <div className="min-w-0">
+                <span className="block truncate text-sm font-semibold tracking-[0.14em] text-white">
                   Bento AIII
                 </span>
-                <span className="font-pixel text-[0.6rem] uppercase tracking-[0.22em] text-slate-500">
-                  systems, products, workflow software
+                <span className="block truncate font-pixel text-[0.6rem] uppercase tracking-[0.22em] text-slate-500">
+                  {copy.brandTagline}
                 </span>
               </div>
             </Link>
 
-            <nav className="hidden items-center gap-1 md:flex">
+            <nav className="hidden items-center gap-1 lg:flex">
               {navItems.map((item) => {
                 const active =
                   item.href === "/"
@@ -64,18 +125,19 @@ export function SiteHeader() {
               })}
             </nav>
 
-            <div className="hidden md:block">
+            <div className="hidden items-center gap-3 lg:flex">
+              {renderLocaleSwitch()}
               <Link href="/contact" className="button-primary">
-                Start inquiry
+                {copy.cta}
               </Link>
             </div>
 
             <button
               type="button"
               onClick={() => setOpen((value) => !value)}
-              className="inline-flex h-11 w-11 items-center justify-center rounded-[0.9rem] border border-white/10 bg-white/[0.03] text-white md:hidden"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-[0.9rem] border border-white/10 bg-white/[0.03] text-white lg:hidden"
               aria-expanded={open}
-              aria-label="Toggle navigation"
+              aria-label={copy.mobileToggleLabel}
             >
               <span className="flex flex-col gap-1.5">
                 <span className="h-px w-5 bg-white" />
@@ -92,7 +154,7 @@ export function SiteHeader() {
                 animate={{ opacity: 1, height: "auto" }}
                 exit={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.24, ease: "easeOut" }}
-                className="overflow-hidden md:hidden"
+                className="overflow-hidden lg:hidden"
               >
                 <div className="mt-4 space-y-2 border-t border-white/10 pt-4">
                   {navItems.map((item) => {
@@ -116,8 +178,11 @@ export function SiteHeader() {
                       </Link>
                     );
                   })}
+
+                  <div className="pt-3">{renderLocaleSwitch("flex-col items-start")}</div>
+
                   <Link href="/contact" className="button-primary mt-2 w-full">
-                    Start inquiry
+                    {copy.cta}
                   </Link>
                 </div>
               </motion.div>
