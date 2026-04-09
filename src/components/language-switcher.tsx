@@ -46,13 +46,25 @@ export function LanguageSwitcher({
   return (
     <div
       className={cn(
-        "flex min-w-0 items-center gap-3",
-        stacked && "w-full flex-col items-start gap-4",
+        "inline-flex shrink-0 items-center gap-3 whitespace-nowrap",
+        stacked && "w-full max-w-[25rem] flex-col items-start gap-3 whitespace-normal",
         className
       )}
     >
-      <span className="label-caps shrink-0">{label}</span>
-      <div className="flex max-w-full flex-wrap items-center rounded-full border-[3px] border-[rgb(var(--ink))] bg-white p-1.5 shadow-[4px_4px_0_0_rgb(var(--shadow))]">
+      <span
+        className={cn(
+          "label-caps shrink-0 whitespace-nowrap leading-none text-[0.66rem] text-[rgb(var(--ink-muted))]",
+          stacked && "pl-1 text-[0.68rem]"
+        )}
+      >
+        {label}
+      </span>
+      <div
+        className={cn(
+          "grid h-16 w-[18.75rem] max-w-full shrink-0 grid-cols-3 items-center gap-1.5 overflow-hidden rounded-full border-[3px] border-[rgb(var(--ink))] bg-white p-1.5 shadow-[4px_4px_0_0_rgb(var(--shadow))]",
+          stacked && "w-full max-w-[19rem]"
+        )}
+      >
         {localeOptions.map((option, index) => {
           const active = option.value === locale;
 
@@ -62,7 +74,7 @@ export function LanguageSwitcher({
               type="button"
               onClick={() => handleLocaleChange(option.value)}
               className={cn(
-                "rounded-full px-3 py-2 font-[var(--font-label)] text-[0.74rem] font-extrabold uppercase tracking-[0.12em] transition sm:px-3.5",
+                "inline-flex h-12 min-w-0 items-center justify-center whitespace-nowrap rounded-full px-3 font-[var(--font-label)] text-[0.9rem] font-black leading-none tracking-[0.06em] transition",
                 active
                   ? "border-[2px] border-[rgb(var(--ink))] bg-[rgb(var(--secondary-container))] text-[rgb(var(--ink))] shadow-[3px_3px_0_0_rgb(var(--shadow))]"
                   : "text-[rgb(var(--ink-muted))] hover:-translate-y-0.5 hover:rotate-[-1deg] hover:bg-[rgb(var(--surface-container-low))] hover:text-[rgb(var(--ink))]",
@@ -70,7 +82,7 @@ export function LanguageSwitcher({
               )}
               aria-pressed={active}
             >
-              {option.label}
+              <span className="block leading-none">{option.label}</span>
             </button>
           );
         })}

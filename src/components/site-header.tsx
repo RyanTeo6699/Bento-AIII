@@ -87,11 +87,15 @@ export function SiteHeader({ locale, navItems, copy }: SiteHeaderProps) {
                 })}
               </nav>
 
-              <div className="hidden items-center gap-3 xl:flex">
-                <LanguageSwitcher locale={locale} label={copy.languageLabel} />
+              <div className="hidden shrink-0 items-center gap-4 xl:flex">
+                <LanguageSwitcher
+                  locale={locale}
+                  label={copy.languageLabel}
+                  className="shrink-0"
+                />
                 <Link
                   href={buildLocalizedPath(locale, "/contact")}
-                  className="button-primary whitespace-nowrap"
+                  className="button-primary shrink-0 whitespace-nowrap"
                 >
                   {copy.cta}
                 </Link>
