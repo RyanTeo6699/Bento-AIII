@@ -102,15 +102,18 @@ export type SystemSiteCopy = {
   };
 };
 
-function pick<T>(value: Record<Locale, T>, locale: Locale): T {
+function pick<TValue extends Record<Locale, unknown>, TKey extends Locale>(
+  value: TValue,
+  locale: TKey
+): TValue[TKey] {
   return value[locale];
 }
 
-function cloneList<T>(value: readonly T[]): T[] {
+function cloneList<T>(value: ReadonlyArray<T>): T[] {
   return [...value];
 }
 
-function cloneObjects<T extends object>(value: readonly T[]): T[] {
+function cloneObjects<T extends object>(value: ReadonlyArray<T>): T[] {
   return value.map((item) => ({ ...item }));
 }
 
