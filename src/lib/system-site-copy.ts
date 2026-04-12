@@ -1,10 +1,44 @@
 import type { Locale } from "@/lib/i18n";
 
+type LocalizedValue<T> = Record<Locale, T>;
+type LocalizedText = LocalizedValue<string>;
+type LocalizedStringList = LocalizedValue<readonly string[]>;
+type LocalizedObjectList<T> = LocalizedValue<readonly T[]>;
+
 type SystemModule = {
   id: string;
   title: string;
   summary: string;
   bullets: string[];
+};
+
+type LabelValueItem = {
+  label: string;
+  value: string;
+};
+
+type ProblemFieldItem = {
+  label: string;
+  title: string;
+  body: string;
+};
+
+type ExecutionLoopStep = {
+  label: string;
+  title: string;
+  body: string;
+};
+
+type ContrastItem = {
+  label: string;
+  before: string;
+  after: string;
+};
+
+type DomainAdaptationItem = {
+  label: string;
+  title: string;
+  body: string;
 };
 
 export type SystemSiteCopy = {
@@ -46,7 +80,7 @@ export type SystemSiteCopy = {
       railTitle: string;
       railModules: string[];
       telemetryTitle: string;
-      telemetryItems: Array<{ label: string; value: string }>;
+      telemetryItems: LabelValueItem[];
       telemetryTraceTitle: string;
       telemetryTrace: string[];
       terminalContext: string;
@@ -57,13 +91,13 @@ export type SystemSiteCopy = {
       eyebrow: string;
       title: string;
       description: string;
-      items: Array<{ label: string; value: string }>;
+      items: LabelValueItem[];
     };
     problemField: {
       eyebrow: string;
       title: string;
       description: string;
-      items: Array<{ label: string; title: string; body: string }>;
+      items: ProblemFieldItem[];
     };
     modules: {
       eyebrow: string;
@@ -75,19 +109,19 @@ export type SystemSiteCopy = {
       eyebrow: string;
       title: string;
       description: string;
-      steps: Array<{ label: string; title: string; body: string }>;
+      steps: ExecutionLoopStep[];
     };
     whyItMatters: {
       eyebrow: string;
       title: string;
       description: string;
-      contrasts: Array<{ label: string; before: string; after: string }>;
+      contrasts: ContrastItem[];
     };
     domainAdaptation: {
       eyebrow: string;
       title: string;
       description: string;
-      items: Array<{ label: string; title: string; body: string }>;
+      items: DomainAdaptationItem[];
     };
     deploymentVectors: {
       eyebrow: string;
@@ -102,10 +136,101 @@ export type SystemSiteCopy = {
   };
 };
 
-function pick<TValue extends Record<Locale, unknown>, TKey extends Locale>(
-  value: TValue,
-  locale: TKey
-): TValue[TKey] {
+type SystemSiteContent = {
+  company: {
+    positioning: LocalizedText;
+    description: LocalizedText;
+    mission: LocalizedText;
+    disclosure: LocalizedText;
+  };
+  header: {
+    brandTagline: LocalizedText;
+    systemState: LocalizedText;
+    systemMode: LocalizedText;
+    buildRef: LocalizedText;
+  };
+  footer: {
+    tagline: LocalizedText;
+    title: LocalizedText;
+    description: LocalizedText;
+    policy: LocalizedText;
+    closingKicker: LocalizedText;
+    closingLine: LocalizedText;
+  };
+  home: {
+    shellBar: {
+      entry: LocalizedText;
+      mode: LocalizedText;
+      railState: LocalizedText;
+      trace: LocalizedText;
+    };
+    hero: {
+      eyebrow: LocalizedText;
+      title: LocalizedText;
+      lead: LocalizedText;
+      summary: LocalizedText;
+      differentiation: LocalizedStringList;
+      primaryLabel: LocalizedText;
+      secondaryLabel: LocalizedText;
+      railTitle: LocalizedText;
+      railModules: LocalizedStringList;
+      telemetryTitle: LocalizedText;
+      telemetryItems: LocalizedObjectList<LabelValueItem>;
+      telemetryTraceTitle: LocalizedText;
+      telemetryTrace: LocalizedStringList;
+      terminalContext: LocalizedText;
+      terminalStatus: LocalizedText;
+      terminalNote: LocalizedText;
+    };
+    coreStatement: {
+      eyebrow: LocalizedText;
+      title: LocalizedText;
+      description: LocalizedText;
+      items: LocalizedObjectList<LabelValueItem>;
+    };
+    problemField: {
+      eyebrow: LocalizedText;
+      title: LocalizedText;
+      description: LocalizedText;
+      items: LocalizedObjectList<ProblemFieldItem>;
+    };
+    modules: {
+      eyebrow: LocalizedText;
+      title: LocalizedText;
+      description: LocalizedText;
+    };
+    executionLoop: {
+      eyebrow: LocalizedText;
+      title: LocalizedText;
+      description: LocalizedText;
+      steps: LocalizedObjectList<ExecutionLoopStep>;
+    };
+    whyItMatters: {
+      eyebrow: LocalizedText;
+      title: LocalizedText;
+      description: LocalizedText;
+      contrasts: LocalizedObjectList<ContrastItem>;
+    };
+    domainAdaptation: {
+      eyebrow: LocalizedText;
+      title: LocalizedText;
+      description: LocalizedText;
+      items: LocalizedObjectList<DomainAdaptationItem>;
+    };
+    deploymentVectors: {
+      eyebrow: LocalizedText;
+      title: LocalizedText;
+      description: LocalizedText;
+    };
+    closing: {
+      eyebrow: LocalizedText;
+      title: LocalizedText;
+      description: LocalizedText;
+    };
+  };
+};
+
+function pick<T>(value: LocalizedValue<T>, locale: Locale): T {
   return value[locale];
 }
 
@@ -117,7 +242,7 @@ function cloneObjects<T extends object>(value: ReadonlyArray<T>): T[] {
   return value.map((item) => ({ ...item }));
 }
 
-const modules = {
+const modules: LocalizedObjectList<SystemModule> = {
   en: [
     {
       id: "INPUT_STRUCTURING",
@@ -250,9 +375,9 @@ const modules = {
       bullets: ["Domain pack 切替", "Schema 置換", "ポリシーと workflow 上書き"]
     }
   ]
-} satisfies Record<Locale, SystemModule[]>;
+};
 
-const content = {
+const content: SystemSiteContent = {
   company: {
     positioning: {
       en:
@@ -1007,7 +1132,7 @@ const content = {
       }
     }
   }
-} as const;
+};
 
 export function getSystemSiteCopy(locale: Locale): SystemSiteCopy {
   return {
@@ -1113,6 +1238,9 @@ export function getSystemCompanyProfile(locale: Locale) {
   return getSystemSiteCopy(locale).company;
 }
 
-export function getSystemHomeModules(locale: Locale) {
-  return modules[locale];
+export function getSystemHomeModules(locale: Locale): SystemModule[] {
+  return modules[locale].map((item) => ({
+    ...item,
+    bullets: [...item.bullets]
+  }));
 }
