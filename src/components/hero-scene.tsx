@@ -1,28 +1,48 @@
 "use client";
 
+import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import type { CSSProperties } from "react";
 import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
+type ArchitectureTone = "primary" | "secondary" | "tertiary";
+
 type ArchitectureModule = {
   id: string;
   title: string;
+  displayTitle: string;
   summary: string;
   bullets: string[];
-};
-
-type ArchitectureTone = "primary" | "secondary" | "tertiary";
-
-type ArchitectureNode = ArchitectureModule & {
-  displayTitle: string;
   headline: string;
   descriptor: string;
   status: string;
   focus: string;
   flow: string;
   tone: ArchitectureTone;
+};
+
+type ArchitectureCore = {
+  label: string;
+  headline: string;
+  summary: string;
+  chips: string[];
+  primaryActionLabel?: string;
+  primaryActionHref?: string;
+  secondaryActionLabel?: string;
+  secondaryActionHref?: string;
+  context: string;
+};
+
+type ArchitectureLabels = {
+  activeModule: string;
+  currentRole: string;
+  executionPath: string;
+  systemContext: string;
+};
+
+type ArchitectureNode = ArchitectureModule & {
   top?: string;
   left?: string;
   right?: string;
@@ -84,67 +104,6 @@ const orbitLayout = [
   }
 ] as const;
 
-const moduleMeta: Record<
-  string,
-  {
-    headline: string;
-    descriptor: string;
-    status: string;
-    focus: string;
-    flow: string;
-    tone: ArchitectureTone;
-  }
-> = {
-  INPUT_STRUCTURING: {
-    headline: "Normalize fragmented demand before routing begins.",
-    descriptor: "Input layer",
-    status: "LIVE INTAKE",
-    focus: "Transforms vague or incomplete requests into structured operational cases.",
-    flow: "Raw demand -> field normalization -> executable case",
-    tone: "secondary"
-  },
-  CONSTRAINT_ROUTING: {
-    headline: "Apply constraints before the system commits a path.",
-    descriptor: "Policy routing",
-    status: "RULES ACTIVE",
-    focus: "Protects decisions by filtering route options through policy, risk, and operational limits.",
-    flow: "Constraint layer -> route gating -> viable path set",
-    tone: "primary"
-  },
-  DUAL_SIDE_EVALUATION: {
-    headline: "Score both sides of the exchange as one decision.",
-    descriptor: "Matching intelligence",
-    status: "FIT SCORING",
-    focus: "Brings demand quality and supply quality into the same evaluation loop.",
-    flow: "Demand fit + supply fit -> trust-weighted decision",
-    tone: "secondary"
-  },
-  WORKFLOW_EXECUTION: {
-    headline: "Keep work moving after selection, not just at selection.",
-    descriptor: "Execution layer",
-    status: "FLOW IN MOTION",
-    focus: "Maintains ownership, state progression, escalation, and proof through execution.",
-    flow: "Assignment -> owner state -> evidence -> escalation",
-    tone: "primary"
-  },
-  OUTCOME_MEMORY: {
-    headline: "Turn outcomes into reusable operational memory.",
-    descriptor: "Learning loop",
-    status: "MEMORY WARM",
-    focus: "Captures what actually happened so future routing and evaluation improve with use.",
-    flow: "Outcome capture -> learning weights -> next decision",
-    tone: "primary"
-  },
-  DOMAIN_ADAPTATION: {
-    headline: "Deploy one core across different service environments.",
-    descriptor: "Domain layer",
-    status: "PACK READY",
-    focus: "Allows workflows, schemas, and policies to adapt without replacing the underlying core.",
-    flow: "Domain pack -> schema overlay -> workflow variant",
-    tone: "tertiary"
-  }
-};
-
 const toneClasses: Record<
   ArchitectureTone,
   {
@@ -160,7 +119,8 @@ const toneClasses: Record<
   primary: {
     badge: "border-[rgba(111,255,176,0.42)] bg-[rgba(111,255,176,0.08)] text-[rgb(var(--architecture-primary))]",
     dot: "bg-[rgb(var(--architecture-primary))]",
-    activeRing: "shadow-[0_0_0_1px_rgba(111,255,176,0.18),0_0_28px_rgba(111,255,176,0.14),0_22px_42px_rgba(0,0,0,0.35)]",
+    activeRing:
+      "shadow-[0_0_0_1px_rgba(111,255,176,0.18),0_0_28px_rgba(111,255,176,0.14),0_22px_42px_rgba(0,0,0,0.35)]",
     activeBorder: "border-[rgba(111,255,176,0.5)]",
     activeLabel: "text-[rgb(var(--architecture-primary))]",
     pathStroke: "rgba(111, 255, 176, 0.78)",
@@ -172,7 +132,8 @@ const toneClasses: Record<
   secondary: {
     badge: "border-[rgba(80,212,255,0.4)] bg-[rgba(80,212,255,0.08)] text-[rgb(var(--architecture-secondary))]",
     dot: "bg-[rgb(var(--architecture-secondary))]",
-    activeRing: "shadow-[0_0_0_1px_rgba(80,212,255,0.18),0_0_28px_rgba(80,212,255,0.12),0_22px_42px_rgba(0,0,0,0.35)]",
+    activeRing:
+      "shadow-[0_0_0_1px_rgba(80,212,255,0.18),0_0_28px_rgba(80,212,255,0.12),0_22px_42px_rgba(0,0,0,0.35)]",
     activeBorder: "border-[rgba(80,212,255,0.48)]",
     activeLabel: "text-[rgb(var(--architecture-secondary))]",
     pathStroke: "rgba(80, 212, 255, 0.78)",
@@ -184,7 +145,8 @@ const toneClasses: Record<
   tertiary: {
     badge: "border-[rgba(150,173,255,0.34)] bg-[rgba(150,173,255,0.08)] text-[rgb(var(--architecture-ink))]",
     dot: "bg-[rgb(var(--architecture-tertiary))]",
-    activeRing: "shadow-[0_0_0_1px_rgba(150,173,255,0.16),0_0_24px_rgba(150,173,255,0.1),0_22px_42px_rgba(0,0,0,0.35)]",
+    activeRing:
+      "shadow-[0_0_0_1px_rgba(150,173,255,0.16),0_0_24px_rgba(150,173,255,0.1),0_22px_42px_rgba(0,0,0,0.35)]",
     activeBorder: "border-[rgba(150,173,255,0.42)]",
     activeLabel: "text-[rgb(var(--architecture-ink))]",
     pathStroke: "rgba(150, 173, 255, 0.72)",
@@ -195,30 +157,10 @@ const toneClasses: Record<
   }
 };
 
-function formatModuleTitle(value: string) {
-  return value
-    .toLowerCase()
-    .split("_")
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-}
-
 function buildArchitectureNode(module: ArchitectureModule, index: number): ArchitectureNode {
-  const layout = orbitLayout[index];
-  const meta = moduleMeta[module.id] ?? {
-    headline: formatModuleTitle(module.title),
-    descriptor: "Core capability",
-    status: "LIVE",
-    focus: module.summary,
-    flow: module.bullets.join(" -> "),
-    tone: "secondary" as const
-  };
-
   return {
     ...module,
-    ...meta,
-    ...layout,
-    displayTitle: formatModuleTitle(module.title)
+    ...orbitLayout[index]
   };
 }
 
@@ -284,18 +226,17 @@ function OrbitNode({
   );
 }
 
-export function HeroScene({
-  modules,
-  title,
-  summary
-}: {
+type HeroSceneProps = {
   modules: ArchitectureModule[];
-  title: string;
-  summary: string;
-}) {
+  core: ArchitectureCore;
+  labels: ArchitectureLabels;
+};
+
+export function HeroScene({ modules, core, labels }: HeroSceneProps) {
   const architectureNodes = modules.slice(0, 6).map(buildArchitectureNode);
   const [activeId, setActiveId] = useState(architectureNodes[0]?.id ?? "");
-  const activeIndex = architectureNodes.findIndex((module) => module.id === activeId);
+  const rawActiveIndex = architectureNodes.findIndex((module) => module.id === activeId);
+  const activeIndex = rawActiveIndex >= 0 ? rawActiveIndex : 0;
   const activeModule = architectureNodes[activeIndex] ?? architectureNodes[0];
 
   if (!activeModule) {
@@ -304,15 +245,51 @@ export function HeroScene({
 
   const activeTone = toneClasses[activeModule.tone];
 
-  return (
-    <div className="architecture-map-shell" aria-label={`${title} architecture map`}>
-      <div className="architecture-map-grid" />
+  const ActiveModuleSurface = (
+    <>
+      <div className="architecture-core-intro">
+        <p className="architecture-kicker">{core.label}</p>
+        <h3 className="architecture-core-intro-title">{core.headline}</h3>
+        <p className="architecture-core-intro-copy">{core.summary}</p>
 
-      <div className="relative space-y-4 lg:hidden">
-        <div className="architecture-core-panel p-5" style={activeTone.panelGlow}>
+        <div className="architecture-core-functions">
+          {core.chips.map((chip) => (
+            <span key={chip} className={cn("architecture-function-chip", activeTone.badge)}>
+              {chip}
+            </span>
+          ))}
+        </div>
+
+        {core.primaryActionLabel || core.secondaryActionLabel ? (
+          <div className="architecture-core-action-row">
+            {core.primaryActionLabel && core.primaryActionHref ? (
+              <Link href={core.primaryActionHref} className="architecture-action">
+                {core.primaryActionLabel}
+              </Link>
+            ) : null}
+            {core.secondaryActionLabel && core.secondaryActionHref ? (
+              <Link href={core.secondaryActionHref} className="architecture-action architecture-action-secondary">
+                {core.secondaryActionLabel}
+              </Link>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
+
+      <div className="architecture-core-divider" />
+
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.div
+          key={activeModule.id}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.22, ease: "easeOut" }}
+          className="architecture-active-wrap"
+        >
           <div className="architecture-core-header">
             <div>
-              <p className="architecture-kicker">ACTIVE MODULE</p>
+              <p className="architecture-readout-label">{labels.activeModule}</p>
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <span className={cn("architecture-module-pill", activeTone.badge)}>{activeModule.title}</span>
                 <span className="architecture-core-index">0{activeIndex + 1}</span>
@@ -324,47 +301,48 @@ export function HeroScene({
             </div>
           </div>
 
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key={activeModule.id}
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.22, ease: "easeOut" }}
-              className="mt-5 space-y-4"
-            >
-              <div className="space-y-2">
-                <p className="architecture-core-name">{activeModule.displayTitle}</p>
-                <h3 className="architecture-core-headline">{activeModule.headline}</h3>
-              </div>
-
-              <p className="architecture-core-summary">{activeModule.summary}</p>
-
-              <div className="architecture-core-readouts">
-                <div className="architecture-core-readout">
-                  <p className="architecture-readout-label">CURRENT ROLE</p>
-                  <p className="architecture-readout-value">{activeModule.focus}</p>
-                </div>
-                <div className="architecture-core-readout">
-                  <p className="architecture-readout-label">EXECUTION PATH</p>
-                  <p className="architecture-readout-value architecture-readout-flow">{activeModule.flow}</p>
-                </div>
-              </div>
-
-              <div className="architecture-core-functions">
-                {activeModule.bullets.map((item) => (
-                  <span key={item} className={cn("architecture-function-chip", activeTone.badge)}>
-                    {item}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
-          </AnimatePresence>
-
-          <div className="architecture-core-footer">
-            <p className="architecture-readout-label">SYSTEM CONTEXT</p>
-            <p className="architecture-context-copy">{summary}</p>
+          <div className="mt-5 space-y-2">
+            <p className="architecture-active-name">{activeModule.displayTitle}</p>
+            <h4 className="architecture-active-headline">{activeModule.headline}</h4>
           </div>
+
+          <p className="architecture-active-summary">{activeModule.summary}</p>
+
+          <div className="architecture-core-readouts">
+            <div className="architecture-core-readout">
+              <p className="architecture-readout-label">{labels.currentRole}</p>
+              <p className="architecture-readout-value">{activeModule.focus}</p>
+            </div>
+            <div className="architecture-core-readout">
+              <p className="architecture-readout-label">{labels.executionPath}</p>
+              <p className="architecture-readout-value architecture-readout-flow">{activeModule.flow}</p>
+            </div>
+          </div>
+
+          <div className="architecture-active-functions">
+            {activeModule.bullets.map((item) => (
+              <span key={item} className={cn("architecture-function-chip", activeTone.badge)}>
+                {item}
+              </span>
+            ))}
+          </div>
+        </motion.div>
+      </AnimatePresence>
+
+      <div className="architecture-core-footer">
+        <p className="architecture-readout-label">{labels.systemContext}</p>
+        <p className="architecture-context-copy">{core.context}</p>
+      </div>
+    </>
+  );
+
+  return (
+    <div className="architecture-map-shell" aria-label={`${core.label} architecture map`}>
+      <div className="architecture-map-grid" />
+
+      <div className="relative space-y-4 lg:hidden">
+        <div className="architecture-core-panel p-5" style={activeTone.panelGlow}>
+          {ActiveModuleSurface}
         </div>
 
         <div className="grid gap-3 md:grid-cols-2">
@@ -381,7 +359,7 @@ export function HeroScene({
         </div>
       </div>
 
-      <div className="relative hidden h-[36rem] lg:block xl:h-[38rem]">
+      <div className="relative hidden h-[39rem] lg:block xl:h-[41rem]">
         <svg className="absolute inset-0 h-full w-full" viewBox="0 0 1000 760" fill="none" aria-hidden="true">
           {architectureNodes.map((module) => (
             <path
@@ -449,70 +427,16 @@ export function HeroScene({
           transition={{ duration: 4.6, repeat: Infinity, ease: "easeInOut" }}
         />
 
-        <div className="absolute left-1/2 top-1/2 z-20 w-[23rem] -translate-x-1/2 -translate-y-1/2 xl:w-[24rem]">
+        <div className="absolute left-1/2 top-1/2 z-20 w-[24rem] -translate-x-1/2 -translate-y-1/2 xl:w-[25rem]">
           <div className="architecture-core-panel px-5 py-5 xl:px-6 xl:py-6" style={activeTone.panelGlow}>
-            <div className="architecture-core-header">
-              <div>
-                <p className="architecture-kicker">ACTIVE MODULE</p>
-                <div className="mt-3 flex flex-wrap items-center gap-2">
-                  <span className={cn("architecture-module-pill", activeTone.badge)}>{activeModule.title}</span>
-                  <span className="architecture-core-index">0{activeIndex + 1}</span>
-                </div>
-              </div>
-              <div className="architecture-state-pill">
-                <span className={cn("architecture-state-dot", activeTone.dot)} />
-                <span>{activeModule.status}</span>
-              </div>
-            </div>
-
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.div
-                key={activeModule.id}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.22, ease: "easeOut" }}
-                className="mt-5 space-y-4"
-              >
-                <div className="space-y-2">
-                  <p className="architecture-core-name">{activeModule.displayTitle}</p>
-                  <h3 className="architecture-core-headline">{activeModule.headline}</h3>
-                </div>
-
-                <p className="architecture-core-summary">{activeModule.summary}</p>
-
-                <div className="architecture-core-readouts">
-                  <div className="architecture-core-readout">
-                    <p className="architecture-readout-label">CURRENT ROLE</p>
-                    <p className="architecture-readout-value">{activeModule.focus}</p>
-                  </div>
-                  <div className="architecture-core-readout">
-                    <p className="architecture-readout-label">EXECUTION PATH</p>
-                    <p className="architecture-readout-value architecture-readout-flow">{activeModule.flow}</p>
-                  </div>
-                </div>
-
-                <div className="architecture-core-functions">
-                  {activeModule.bullets.map((item) => (
-                    <span key={item} className={cn("architecture-function-chip", activeTone.badge)}>
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
-            </AnimatePresence>
-
-            <div className="architecture-core-footer">
-              <p className="architecture-readout-label">SYSTEM CONTEXT</p>
-              <p className="architecture-context-copy">{summary}</p>
-            </div>
+            {ActiveModuleSurface}
           </div>
         </div>
 
         {architectureNodes.map((module, index) => (
           <motion.div
             key={module.id}
-            className={cn("absolute w-[9.6rem] xl:w-[10.25rem]", module.tilt)}
+            className={cn("absolute w-[9.2rem] xl:w-[10rem]", module.tilt)}
             style={{
               top: module.top,
               left: module.left,
