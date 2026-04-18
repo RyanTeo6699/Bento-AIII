@@ -48,17 +48,17 @@ export default function ContactPage() {
 
             <div className="grid gap-4">
               <Reveal delay={0.04}>
-                <div className="surface flex items-center gap-3 p-5">
+                <div className="inline-flex items-center gap-3 rounded-full border border-[rgb(var(--outline)/0.78)] bg-[rgba(255,255,255,0.72)] px-3 py-3 shadow-[0_14px_30px_rgba(15,23,42,0.05)]">
                   {contactChannels.map((channel) => (
                     <a
                       key={channel.icon}
                       href={channel.href}
                       aria-label={channel.ariaLabel}
-                      className="grid h-12 w-12 place-items-center rounded-full border border-[rgb(var(--outline)/0.76)] bg-[rgb(var(--surface-lowest))] transition hover:-translate-y-0.5 hover:border-[rgb(var(--outline-strong))] hover:shadow-[0_14px_28px_rgba(15,23,42,0.08)]"
+                      className="grid h-14 w-14 place-items-center rounded-full border border-[rgb(var(--outline)/0.74)] bg-[rgb(var(--surface-lowest))] transition hover:-translate-y-0.5 hover:border-[rgb(var(--outline-strong))] hover:shadow-[0_14px_28px_rgba(15,23,42,0.08)]"
                       target={channel.external ? "_blank" : undefined}
                       rel={channel.external ? "noreferrer" : undefined}
                     >
-                      <ContactChannelIcon kind={channel.icon} />
+                      <ContactChannelIcon kind={channel.icon} className="h-[1.3rem] w-[1.3rem]" />
                     </a>
                   ))}
                 </div>

@@ -145,10 +145,10 @@ const toneClasses: Record<
 };
 
 const actionClassName =
-  "inline-flex min-h-10 items-center justify-center rounded-full border border-[rgb(var(--outline))] bg-[rgba(255,255,255,0.9)] px-4 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[rgb(var(--ink))] transition hover:-translate-y-0.5 hover:border-[rgb(var(--outline-strong))] hover:shadow-[0_14px_28px_rgba(15,23,42,0.08)]";
+  "inline-flex min-h-9 items-center justify-center rounded-full border border-[rgb(var(--outline)/0.76)] bg-[rgba(255,255,255,0.82)] px-3.5 text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-[rgb(var(--ink))] transition hover:-translate-y-0.5 hover:border-[rgb(var(--outline-strong))] hover:shadow-[0_12px_22px_rgba(15,23,42,0.06)]";
 
 const secondaryActionClassName =
-  "inline-flex min-h-10 items-center justify-center rounded-full border border-[rgb(var(--outline)/0.82)] bg-[rgba(247,244,239,0.82)] px-4 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[rgb(var(--ink-soft))] transition hover:-translate-y-0.5 hover:border-[rgb(var(--outline-strong))] hover:text-[rgb(var(--ink))] hover:shadow-[0_14px_28px_rgba(15,23,42,0.08)]";
+  "inline-flex min-h-9 items-center justify-center rounded-full border border-[rgb(var(--outline)/0.72)] bg-[rgba(247,244,239,0.74)] px-3.5 text-[0.64rem] font-semibold uppercase tracking-[0.16em] text-[rgb(var(--ink-soft))] transition hover:-translate-y-0.5 hover:border-[rgb(var(--outline-strong))] hover:text-[rgb(var(--ink))] hover:shadow-[0_12px_22px_rgba(15,23,42,0.06)]";
 
 function buildArchitectureNode(module: ArchitectureModule, index: number): ArchitectureNode {
   return {
@@ -305,15 +305,10 @@ export function HeroScene({ modules, core, labels }: HeroSceneProps) {
           </p>
         </div>
 
-        <div className="relative mt-4 flex flex-wrap gap-2 pl-4">
+        <div className="relative mt-4 flex flex-wrap items-center gap-x-3 gap-y-1.5 pl-4 text-[0.58rem] font-semibold uppercase tracking-[0.14em] text-[rgb(var(--ink-muted))]">
           {activeSignals.map((item) => (
-            <span
-              key={item}
-              className={cn(
-                "inline-flex items-center justify-center rounded-full border px-2 py-1 text-[0.58rem] font-semibold uppercase tracking-[0.14em]",
-                activeTone.chip
-              )}
-            >
+            <span key={item} className="inline-flex items-center gap-1.5">
+              <span className={cn("inline-flex h-1.5 w-1.5 rounded-full", activeTone.dot)} />
               {item}
             </span>
           ))}

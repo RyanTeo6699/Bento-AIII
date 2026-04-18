@@ -68,8 +68,7 @@ export function generateMetadata(): Metadata {
 const previewNodePositions = [
   "left-4 top-5 md:left-6 md:top-6",
   "right-4 top-5 md:right-6 md:top-6",
-  "bottom-5 left-3 md:bottom-6 md:left-5",
-  "bottom-5 right-3 md:bottom-6 md:right-5"
+  "bottom-5 left-1/2 -translate-x-1/2 md:bottom-6"
 ] as const;
 
 const previewGridStyle: CSSProperties = {
@@ -186,30 +185,30 @@ export default function HomePage() {
                   />
                 </svg>
 
-                <div className="pointer-events-none absolute left-1/2 top-1/2 h-[10.5rem] w-[10.5rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[rgba(165,171,180,0.18)]" />
-                <div className="pointer-events-none absolute left-1/2 top-1/2 h-[15rem] w-[15rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[rgba(165,171,180,0.12)]" />
+                <div className="pointer-events-none absolute left-1/2 top-1/2 h-[10rem] w-[10rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[rgba(165,171,180,0.16)]" />
+                <div className="pointer-events-none absolute left-1/2 top-1/2 h-[14rem] w-[14rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[rgba(165,171,180,0.1)]" />
 
-                <div className="absolute left-1/2 top-1/2 z-10 w-[min(15.75rem,calc(100%-3.5rem))] -translate-x-1/2 -translate-y-1/2 rounded-[1.6rem] border border-[rgb(var(--outline)/0.66)] bg-[rgba(255,255,255,0.78)] p-4 shadow-[0_12px_28px_rgba(15,23,42,0.05)] backdrop-blur">
+                <div className="absolute left-1/2 top-1/2 z-10 w-[min(14.25rem,calc(100%-4.5rem))] -translate-x-1/2 -translate-y-1/2 rounded-[1.45rem] border border-[rgb(var(--outline)/0.58)] bg-[rgba(255,255,255,0.72)] p-3.5 shadow-[0_10px_22px_rgba(15,23,42,0.04)] backdrop-blur">
                   <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[rgb(var(--ink-muted))]">
                     {homepageCopy.hero.previewLabel}
                   </p>
-                  <h2 className="mt-3.5 max-w-[12ch] text-[1.12rem] font-semibold leading-[1.08] tracking-[-0.04em] text-[rgb(var(--ink))]">
+                  <h2 className="mt-3 max-w-[12ch] text-[1.02rem] font-semibold leading-[1.08] tracking-[-0.04em] text-[rgb(var(--ink))]">
                     {homepageCopy.hero.previewTitle}
                   </h2>
-                  <p className="mt-2.5 text-[0.78rem] leading-6 text-[rgb(var(--ink-soft))]">
+                  <p className="mt-2 text-[0.74rem] leading-6 text-[rgb(var(--ink-soft))]">
                     {homepageCopy.hero.previewSummary}
                   </p>
                 </div>
 
-                {homepageCopy.hero.previewSignals.map((signal, index) => (
+                {homepageCopy.hero.previewSignals.slice(0, 3).map((signal, index) => (
                   <div
                     key={signal.label}
-                    className={`absolute z-[1] w-[6.35rem] rounded-[0.95rem] border border-[rgb(var(--outline)/0.56)] bg-[rgba(255,255,255,0.56)] p-2.5 shadow-[0_10px_18px_rgba(15,23,42,0.03)] backdrop-blur ${previewNodePositions[index] ?? ""}`}
+                    className={`absolute z-[1] w-[5.6rem] rounded-[0.85rem] border border-[rgb(var(--outline)/0.48)] bg-[rgba(255,255,255,0.48)] p-2 shadow-[0_8px_14px_rgba(15,23,42,0.025)] backdrop-blur ${previewNodePositions[index] ?? ""}`}
                   >
                     <p className="text-[0.56rem] font-semibold uppercase tracking-[0.14em] text-[rgb(var(--ink-muted))]">
                       {signal.label}
                     </p>
-                    <p className="mt-1.5 text-[0.68rem] font-medium leading-5 tracking-[-0.02em] text-[rgb(var(--ink-soft))]">
+                    <p className="mt-1 text-[0.62rem] font-medium leading-5 tracking-[-0.02em] text-[rgb(var(--ink-soft))]">
                       {signal.value}
                     </p>
                   </div>
