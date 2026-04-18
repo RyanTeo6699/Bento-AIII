@@ -1,0 +1,166 @@
+:root {
+  color-scheme: dark;
+  --background: 8 11 17;
+  --background-elevated: 12 16 24;
+  --surface: 16 20 30;
+  --surface-lowest: 21 26 37;
+  --surface-container-low: 18 23 33;
+  --surface-container: 24 30 42;
+  --surface-container-high: 30 37 50;
+  --surface-container-highest: 38 46 60;
+  --primary: 229 234 242;
+  --primary-veil: 70 82 103;
+  --secondary: 154 165 184;
+  --secondary-veil: 46 56 74;
+  --tertiary: 178 154 128;
+  --tertiary-container: 58 48 40;
+  --danger: 233 133 115;
+  --danger-veil: 74 34 28;
+  --ink: 239 243 249;
+  --ink-soft: 177 186 201;
+  --ink-muted: 122 133 151;
+  --outline: 56 66 84;
+  --outline-strong: 82 95 116;
+  --shadow: 7 10 15;
+  --grid: 34 42 56;
+}
+
+body {
+  background:
+    radial-gradient(circle at top, rgba(118, 134, 162, 0.14), transparent 34%),
+    radial-gradient(circle at 82% 0%, rgba(74, 88, 113, 0.18), transparent 26%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 20%),
+    linear-gradient(180deg, rgb(var(--background-elevated)), rgb(var(--background)));
+}
+
+body::before {
+  background:
+    radial-gradient(circle at 10% 8%, rgba(104, 122, 152, 0.16), transparent 28%),
+    radial-gradient(circle at 88% 0%, rgba(64, 76, 98, 0.22), transparent 22%);
+  opacity: 1;
+}
+
+body::after {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 26%),
+    linear-gradient(180deg, transparent 58%, rgba(78, 92, 116, 0.12));
+}
+
+::selection {
+  background: rgba(229, 234, 242, 0.16);
+}
+
+.surface,
+.boxed-section,
+.pack-card,
+.terminal-panel {
+  background: linear-gradient(180deg, rgba(22, 27, 38, 0.94), rgba(14, 18, 27, 0.92));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 24px 56px rgba(0, 0, 0, 0.28);
+}
+
+.pack-card:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 28px 56px rgba(0, 0, 0, 0.34);
+}
+
+.terminal-panel {
+  background: linear-gradient(180deg, rgba(20, 26, 37, 0.96), rgba(13, 17, 26, 0.94));
+}
+
+.signal-chip,
+.project-chip {
+  background: rgb(var(--surface-container));
+}
+
+.card-stack::before {
+  background: rgba(18, 23, 33, 0.52);
+}
+
+.button-primary,
+.toy-button,
+.home-action-primary {
+  color: rgb(14 18 26);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.22);
+}
+
+.button-primary:hover,
+.toy-button:hover,
+.home-action-primary:hover {
+  background: rgb(243 246 251);
+  box-shadow: 0 20px 36px rgba(0, 0, 0, 0.26);
+}
+
+.button-secondary,
+.home-action-secondary,
+.home-panel-action,
+.home-chip-action,
+.home-utility-action {
+  background: rgba(20, 25, 36, 0.82);
+}
+
+.button-secondary:hover,
+.home-action-secondary:hover,
+.home-panel-action:hover,
+.home-chip-action:hover,
+.home-utility-action:hover {
+  background: rgba(26, 32, 44, 0.96);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.22);
+}
+
+.brand-mark {
+  background: linear-gradient(180deg, rgba(19, 24, 35, 0.94), rgba(12, 16, 24, 0.96));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 14px 30px rgba(0, 0, 0, 0.26);
+}
+
+.hud-line {
+  background: linear-gradient(90deg, rgba(229, 234, 242, 0.18), rgba(154, 165, 184, 0.14), transparent);
+}
+
+.site-header-shell {
+  border: 1px solid rgb(var(--outline) / 0.84);
+  background: linear-gradient(180deg, rgba(16, 21, 31, 0.88), rgba(10, 14, 22, 0.92));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 22px 48px rgba(0, 0, 0, 0.28);
+}
+
+.site-nav-link:hover,
+.site-nav-link-active {
+  background: rgba(24, 30, 42, 0.9);
+}
+
+.site-header-toggle {
+  background: rgba(20, 25, 36, 0.9);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+}
+
+.language-switcher-shell {
+  background: rgba(18, 23, 33, 0.84);
+}
+
+.language-switcher-button-active {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 10px 20px rgba(0, 0, 0, 0.22);
+}
+
+.site-footer {
+  background:
+    linear-gradient(180deg, rgba(8, 11, 17, 0), rgba(8, 11, 17, 0.82) 18%, rgba(6, 8, 14, 1)),
+    rgb(var(--background));
+}
+
+.form-input,
+.form-textarea {
+  background: rgba(18, 23, 33, 0.82);
+}
+
+.form-input:focus,
+.form-textarea:focus {
+  box-shadow: 0 0 0 4px rgba(229, 234, 242, 0.08);
+}

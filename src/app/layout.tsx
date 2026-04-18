@@ -12,6 +12,7 @@ import { getHtmlLang, getSiteMetadataBase } from "@/lib/metadata";
 import { getSystemSiteCopy } from "@/lib/system-site-copy";
 
 import "./globals.css";
+import "./dark-theme.css";
 
 const headlineFont = Space_Grotesk({
   subsets: ["latin"],

@@ -73,10 +73,16 @@ const previewNodePositions = [
 
 const previewGridStyle: CSSProperties = {
   backgroundImage:
-    "linear-gradient(rgba(214, 208, 199, 0.7) 1px, transparent 1px), linear-gradient(90deg, rgba(214, 208, 199, 0.7) 1px, transparent 1px)",
+    "linear-gradient(rgba(90, 102, 122, 0.28) 1px, transparent 1px), linear-gradient(90deg, rgba(90, 102, 122, 0.28) 1px, transparent 1px)",
   backgroundSize: "28px 28px",
   maskImage: "linear-gradient(180deg, rgba(255,255,255,0.88), transparent 92%)"
 };
+
+const darkPanelClass =
+  "overflow-hidden rounded-[2rem] border border-[rgb(var(--outline)/0.82)] bg-[linear-gradient(180deg,rgba(18,23,33,0.94),rgba(11,15,23,0.92))] shadow-[0_26px_64px_rgba(0,0,0,0.3)]";
+
+const darkPanelSoftClass =
+  "overflow-hidden rounded-[2rem] border border-[rgb(var(--outline)/0.78)] bg-[linear-gradient(180deg,rgba(21,27,37,0.9),rgba(12,16,24,0.88))] shadow-[0_22px_56px_rgba(0,0,0,0.28)]";
 
 export default function HomePage() {
   const locale = getCurrentLocale();
@@ -107,7 +113,7 @@ export default function HomePage() {
       <section className="site-hero-section" id="system-entry">
         <div className="shell">
           <div className="relative">
-            <div className="pointer-events-none absolute -top-16 left-[8%] h-44 w-44 rounded-full bg-[radial-gradient(circle,_rgba(255,255,255,0.95),rgba(255,255,255,0))] blur-3xl" />
+            <div className="pointer-events-none absolute -top-16 left-[8%] h-44 w-44 rounded-full bg-[radial-gradient(circle,_rgba(125,141,171,0.2),rgba(125,141,171,0))] blur-3xl" />
             <div className="grid gap-14 xl:grid-cols-[minmax(0,1fr)_minmax(22rem,0.92fr)] xl:items-center">
               <Reveal className="max-w-[43rem]" y={20}>
                 <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[rgb(var(--ink-muted))]">
@@ -132,13 +138,13 @@ export default function HomePage() {
                 <div className="mt-8 flex flex-wrap gap-3">
                   <Link
                     href={`${homePath}#system-core`}
-                    className="inline-flex min-h-[3rem] items-center justify-center rounded-full bg-[rgb(var(--primary))] px-5 text-[0.78rem] font-semibold uppercase tracking-[0.16em] text-[rgb(var(--surface-lowest))] shadow-[0_20px_44px_rgba(15,23,42,0.12)] transition hover:-translate-y-0.5 hover:bg-[rgb(21,25,35)]"
+                    className="inline-flex min-h-[3rem] items-center justify-center rounded-full bg-[rgb(var(--primary))] px-5 text-[0.78rem] font-semibold uppercase tracking-[0.16em] text-[rgb(14,18,26)] shadow-[0_20px_44px_rgba(0,0,0,0.24)] transition hover:-translate-y-0.5 hover:bg-[rgb(243,246,251)]"
                   >
                     {homepageCopy.hero.primaryLabel}
                   </Link>
                   <Link
                     href={deploymentDiscussionHref}
-                    className="inline-flex min-h-[3rem] items-center justify-center rounded-full border border-[rgb(var(--outline))] bg-[rgb(var(--surface-lowest))] px-5 text-[0.78rem] font-semibold uppercase tracking-[0.16em] text-[rgb(var(--ink))] transition hover:-translate-y-0.5 hover:border-[rgb(var(--outline-strong))] hover:shadow-[0_18px_40px_rgba(15,23,42,0.08)]"
+                    className="inline-flex min-h-[3rem] items-center justify-center rounded-full border border-[rgb(var(--outline))] bg-[rgb(var(--surface-lowest))] px-5 text-[0.78rem] font-semibold uppercase tracking-[0.16em] text-[rgb(var(--ink))] transition hover:-translate-y-0.5 hover:border-[rgb(var(--outline-strong))] hover:bg-[rgba(29,35,47,0.96)] hover:shadow-[0_18px_40px_rgba(0,0,0,0.22)]"
                   >
                     {homepageCopy.hero.secondaryLabel}
                   </Link>
@@ -146,12 +152,12 @@ export default function HomePage() {
               </Reveal>
 
               <Reveal
-                className="relative min-h-[25.5rem] overflow-hidden rounded-[2rem] border border-[rgb(var(--outline)/0.76)] bg-[linear-gradient(180deg,rgba(255,255,255,0.94),rgba(244,240,233,0.9))] p-4 shadow-[0_18px_46px_rgba(15,23,42,0.05)] md:min-h-[27rem] md:p-5"
+                className="relative min-h-[25.5rem] overflow-hidden rounded-[2rem] border border-[rgb(var(--outline)/0.76)] bg-[linear-gradient(180deg,rgba(18,23,33,0.95),rgba(11,15,23,0.92))] p-4 shadow-[0_20px_48px_rgba(0,0,0,0.28)] md:min-h-[27rem] md:p-5"
                 delay={0.08}
                 y={20}
               >
                 <div className="pointer-events-none absolute inset-0 opacity-[0.46]" style={previewGridStyle} />
-                <div className="pointer-events-none absolute inset-x-[22%] top-[12%] h-24 rounded-full bg-[radial-gradient(circle,_rgba(255,255,255,0.92),rgba(255,255,255,0))] blur-3xl" />
+                <div className="pointer-events-none absolute inset-x-[22%] top-[12%] h-24 rounded-full bg-[radial-gradient(circle,_rgba(121,136,164,0.16),rgba(121,136,164,0))] blur-3xl" />
 
                 <svg
                   className="pointer-events-none absolute inset-0 h-full w-full"
@@ -161,41 +167,41 @@ export default function HomePage() {
                 >
                   <path
                     d="M300 230 C246 186 196 154 130 110"
-                    stroke="rgba(128, 143, 163, 0.42)"
+                    stroke="rgba(123, 137, 159, 0.24)"
                     strokeDasharray="10 12"
                     strokeWidth="1.3"
                   />
                   <path
                     d="M300 230 C354 186 404 154 470 110"
-                    stroke="rgba(128, 143, 163, 0.42)"
+                    stroke="rgba(123, 137, 159, 0.24)"
                     strokeDasharray="10 12"
                     strokeWidth="1.3"
                   />
                   <path
                     d="M300 230 C244 256 194 286 124 336"
-                    stroke="rgba(128, 143, 163, 0.42)"
+                    stroke="rgba(123, 137, 159, 0.24)"
                     strokeDasharray="10 12"
                     strokeWidth="1.3"
                   />
                   <path
                     d="M300 230 C356 256 406 286 476 336"
-                    stroke="rgba(128, 143, 163, 0.42)"
+                    stroke="rgba(123, 137, 159, 0.24)"
                     strokeDasharray="10 12"
                     strokeWidth="1.3"
                   />
                 </svg>
 
-                <div className="pointer-events-none absolute left-1/2 top-1/2 h-[10rem] w-[10rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[rgba(165,171,180,0.16)]" />
-                <div className="pointer-events-none absolute left-1/2 top-1/2 h-[14rem] w-[14rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[rgba(165,171,180,0.1)]" />
+                <div className="pointer-events-none absolute left-1/2 top-1/2 h-[10rem] w-[10rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[rgba(96,108,128,0.18)]" />
+                <div className="pointer-events-none absolute left-1/2 top-1/2 h-[14rem] w-[14rem] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[rgba(96,108,128,0.1)]" />
 
-                <div className="absolute left-1/2 top-1/2 z-10 w-[min(14.25rem,calc(100%-4.5rem))] -translate-x-1/2 -translate-y-1/2 rounded-[1.45rem] border border-[rgb(var(--outline)/0.58)] bg-[rgba(255,255,255,0.72)] p-3.5 shadow-[0_10px_22px_rgba(15,23,42,0.04)] backdrop-blur">
+                <div className="absolute left-1/2 top-1/2 z-10 w-[min(13.5rem,calc(100%-5rem))] -translate-x-1/2 -translate-y-1/2 rounded-[1.35rem] border border-[rgb(var(--outline)/0.54)] bg-[rgba(18,24,34,0.82)] p-3 shadow-[0_12px_24px_rgba(0,0,0,0.22)] backdrop-blur">
                   <p className="text-[0.68rem] font-semibold uppercase tracking-[0.18em] text-[rgb(var(--ink-muted))]">
                     {homepageCopy.hero.previewLabel}
                   </p>
-                  <h2 className="mt-3 max-w-[12ch] text-[1.02rem] font-semibold leading-[1.08] tracking-[-0.04em] text-[rgb(var(--ink))]">
+                  <h2 className="mt-2.5 max-w-[11ch] text-[0.96rem] font-semibold leading-[1.08] tracking-[-0.04em] text-[rgb(var(--ink))]">
                     {homepageCopy.hero.previewTitle}
                   </h2>
-                  <p className="mt-2 text-[0.74rem] leading-6 text-[rgb(var(--ink-soft))]">
+                  <p className="mt-2 text-[0.7rem] leading-5 text-[rgb(var(--ink-soft))]">
                     {homepageCopy.hero.previewSummary}
                   </p>
                 </div>
@@ -203,12 +209,12 @@ export default function HomePage() {
                 {homepageCopy.hero.previewSignals.slice(0, 3).map((signal, index) => (
                   <div
                     key={signal.label}
-                    className={`absolute z-[1] w-[5.6rem] rounded-[0.85rem] border border-[rgb(var(--outline)/0.48)] bg-[rgba(255,255,255,0.48)] p-2 shadow-[0_8px_14px_rgba(15,23,42,0.025)] backdrop-blur ${previewNodePositions[index] ?? ""}`}
+                    className={`absolute z-[1] w-[5rem] rounded-[0.8rem] border border-[rgb(var(--outline)/0.42)] bg-[rgba(16,21,31,0.68)] p-2 shadow-[0_8px_14px_rgba(0,0,0,0.16)] backdrop-blur ${previewNodePositions[index] ?? ""}`}
                   >
                     <p className="text-[0.56rem] font-semibold uppercase tracking-[0.14em] text-[rgb(var(--ink-muted))]">
                       {signal.label}
                     </p>
-                    <p className="mt-1 text-[0.62rem] font-medium leading-5 tracking-[-0.02em] text-[rgb(var(--ink-soft))]">
+                    <p className="mt-1 text-[0.58rem] font-medium leading-4 tracking-[-0.02em] text-[rgb(var(--ink-soft))]">
                       {signal.value}
                     </p>
                   </div>
@@ -221,7 +227,7 @@ export default function HomePage() {
 
       <section className="site-section-tight" id="problem-core">
         <div className="shell">
-          <div className="overflow-hidden rounded-[2rem] border border-[rgb(var(--outline)/0.82)] bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(246,242,237,0.86))] shadow-[0_24px_64px_rgba(15,23,42,0.06)]">
+          <div className={darkPanelClass}>
             <div className="grid gap-0 lg:grid-cols-2">
               <Reveal className="px-6 py-8 md:px-10 md:py-10" y={18}>
                 <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[rgb(var(--ink-muted))]">
@@ -241,7 +247,7 @@ export default function HomePage() {
                         <span className="pointer-events-none absolute left-[0.82rem] top-[2.1rem] h-[calc(100%-0.35rem)] w-px bg-[linear-gradient(180deg,rgba(109,120,141,0.22),rgba(109,120,141,0.06))]" />
                       ) : null}
                       <div className="flex items-start gap-4">
-                        <span className="inline-flex min-w-[2.2rem] items-center justify-center rounded-full border border-[rgb(var(--outline)/0.76)] bg-[rgba(255,255,255,0.84)] px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[rgb(var(--ink-muted))]">
+                        <span className="inline-flex min-w-[2.2rem] items-center justify-center rounded-full border border-[rgb(var(--outline)/0.76)] bg-[rgba(21,26,37,0.88)] px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[rgb(var(--ink-muted))]">
                           0{index + 1}
                         </span>
                         <p className="max-w-[25rem] pt-0.5 text-[0.92rem] font-medium leading-7 tracking-[-0.02em] text-[rgb(var(--ink))]">
@@ -254,7 +260,7 @@ export default function HomePage() {
               </Reveal>
 
               <Reveal
-                className="border-t border-[rgb(var(--outline)/0.72)] bg-[rgba(252,250,247,0.72)] px-6 py-8 md:px-10 md:py-10 lg:border-l lg:border-t-0"
+                className="border-t border-[rgb(var(--outline)/0.72)] bg-[rgba(17,22,32,0.72)] px-6 py-8 md:px-10 md:py-10 lg:border-l lg:border-t-0"
                 delay={0.06}
                 y={18}
               >
@@ -331,11 +337,11 @@ export default function HomePage() {
           </Reveal>
 
           <Reveal
-            className="relative mt-10 overflow-hidden rounded-[2rem] border border-[rgb(var(--outline)/0.82)] bg-[linear-gradient(180deg,rgba(255,255,255,0.94),rgba(246,242,237,0.9))] p-4 shadow-[0_24px_64px_rgba(15,23,42,0.06)] md:p-6"
+            className="relative mt-10 overflow-hidden rounded-[2rem] border border-[rgb(var(--outline)/0.82)] bg-[linear-gradient(180deg,rgba(18,23,33,0.94),rgba(11,15,23,0.92))] p-4 shadow-[0_24px_64px_rgba(0,0,0,0.28)] md:p-6"
             delay={0.08}
             y={18}
           >
-            <div className="pointer-events-none absolute left-12 right-12 top-[3.2rem] hidden h-px bg-[linear-gradient(90deg,rgba(31,36,48,0.18),rgba(109,120,141,0.16),rgba(31,36,48,0.08))] xl:block" />
+            <div className="pointer-events-none absolute left-12 right-12 top-[3.2rem] hidden h-px bg-[linear-gradient(90deg,rgba(229,234,242,0.18),rgba(122,133,151,0.16),rgba(229,234,242,0.06))] xl:block" />
 
             <div className="relative grid gap-6 md:grid-cols-2 xl:grid-cols-6 xl:gap-0">
               {homepageCopy.executionLoop.steps.map((step, index) => (
@@ -343,7 +349,7 @@ export default function HomePage() {
                   key={step.label}
                   className="relative pl-7 xl:px-4 xl:pb-2 xl:pt-10 xl:text-center"
                 >
-                  <span className="absolute left-0 top-1.5 h-3.5 w-3.5 rounded-full border border-[rgba(31,36,48,0.22)] bg-[rgb(var(--surface-lowest))] shadow-[0_0_0_5px_rgba(255,255,255,0.94)] xl:left-1/2 xl:top-[1.55rem] xl:-translate-x-1/2" />
+                  <span className="absolute left-0 top-1.5 h-3.5 w-3.5 rounded-full border border-[rgb(var(--outline)/0.72)] bg-[rgb(var(--surface-lowest))] shadow-[0_0_0_5px_rgba(8,11,17,0.96)] xl:left-1/2 xl:top-[1.55rem] xl:-translate-x-1/2" />
                   <span className="text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-[rgb(var(--ink-muted))]">
                     0{index + 1}
                   </span>
@@ -376,7 +382,7 @@ export default function HomePage() {
             />
           </Reveal>
 
-          <div className="mt-10 overflow-hidden rounded-[2rem] border border-[rgb(var(--outline)/0.82)] bg-[linear-gradient(180deg,rgba(255,255,255,0.9),rgba(247,244,239,0.84))] shadow-[0_24px_64px_rgba(15,23,42,0.06)]">
+          <div className={darkPanelSoftClass}>
             <div className="grid gap-0 lg:grid-cols-2">
               <Reveal className="px-6 py-8 md:px-10 md:py-10" delay={0.04} y={16}>
                 <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[rgb(var(--ink-muted))]">
@@ -395,7 +401,7 @@ export default function HomePage() {
               </Reveal>
 
               <Reveal
-                className="border-t border-[rgb(var(--outline)/0.72)] bg-[rgba(249,250,252,0.8)] px-6 py-8 md:px-10 md:py-10 lg:border-l lg:border-t-0"
+                className="border-t border-[rgb(var(--outline)/0.72)] bg-[rgba(17,22,32,0.74)] px-6 py-8 md:px-10 md:py-10 lg:border-l lg:border-t-0"
                 delay={0.08}
                 y={16}
               >
@@ -430,13 +436,13 @@ export default function HomePage() {
           </Reveal>
 
           <Reveal
-            className="mt-10 overflow-hidden rounded-[2rem] border border-[rgb(var(--outline)/0.78)] bg-[linear-gradient(180deg,rgba(255,255,255,0.88),rgba(247,244,239,0.82))] shadow-[0_20px_52px_rgba(15,23,42,0.05)]"
+            className="mt-10 overflow-hidden rounded-[2rem] border border-[rgb(var(--outline)/0.78)] bg-[linear-gradient(180deg,rgba(18,23,33,0.9),rgba(11,15,23,0.88))] shadow-[0_20px_52px_rgba(0,0,0,0.26)]"
             delay={0.04}
             y={16}
           >
             <div className="grid gap-px bg-[rgb(var(--outline)/0.72)] md:grid-cols-2 xl:grid-cols-3">
               {homepageCopy.domainAdaptation.items.map((item, index) => (
-                <div key={item} className="bg-[rgba(255,255,255,0.78)] px-5 py-5">
+                <div key={item} className="bg-[rgba(18,23,33,0.82)] px-5 py-5">
                   <p className="text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-[rgb(var(--ink-muted))]">
                     0{index + 1}
                   </p>
@@ -463,7 +469,7 @@ export default function HomePage() {
       <section className="site-section-tight" id="company-position">
         <div className="shell">
           <Reveal
-            className="overflow-hidden rounded-[2rem] border border-[rgb(var(--outline)/0.8)] bg-[linear-gradient(180deg,rgba(255,255,255,0.9),rgba(245,241,236,0.84))] p-6 shadow-[0_20px_52px_rgba(15,23,42,0.05)] md:p-8 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,0.96fr)] lg:gap-10"
+            className="overflow-hidden rounded-[2rem] border border-[rgb(var(--outline)/0.8)] bg-[linear-gradient(180deg,rgba(18,23,33,0.92),rgba(11,15,23,0.9))] p-6 shadow-[0_20px_52px_rgba(0,0,0,0.28)] md:p-8 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,0.96fr)] lg:gap-10"
             y={18}
           >
             <div className="max-w-[34rem]">
@@ -482,7 +488,7 @@ export default function HomePage() {
               {homepageCopy.companyPosition.support.map((item) => (
                 <div
                   key={item.label}
-                  className="rounded-[1.2rem] border border-[rgb(var(--outline)/0.66)] bg-[rgba(255,255,255,0.68)] p-[1.125rem]"
+                  className="rounded-[1.2rem] border border-[rgb(var(--outline)/0.66)] bg-[rgba(19,24,35,0.74)] p-[1.125rem]"
                 >
                   <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[rgb(var(--ink-muted))]">
                     {item.label}
@@ -500,7 +506,7 @@ export default function HomePage() {
       <section className="site-section" id="next-action">
         <div className="shell">
           <Reveal
-            className="mx-auto max-w-[52rem] overflow-hidden rounded-[2rem] border border-[rgb(var(--outline)/0.82)] bg-[linear-gradient(180deg,rgba(255,255,255,0.95),rgba(246,241,235,0.9))] px-6 py-9 text-center shadow-[0_24px_62px_rgba(15,23,42,0.07)] md:px-10 md:py-10"
+            className="mx-auto max-w-[52rem] overflow-hidden rounded-[2rem] border border-[rgb(var(--outline)/0.82)] bg-[linear-gradient(180deg,rgba(20,25,36,0.94),rgba(12,16,24,0.92))] px-6 py-9 text-center shadow-[0_24px_62px_rgba(0,0,0,0.3)] md:px-10 md:py-10"
             y={18}
           >
             <SectionIntro
@@ -513,13 +519,13 @@ export default function HomePage() {
             <div className="mt-7 flex flex-wrap justify-center gap-3">
               <Link
                 href={architectureReviewHref}
-                className="inline-flex min-h-[3rem] items-center justify-center rounded-full bg-[rgb(var(--primary))] px-5 text-[0.78rem] font-semibold uppercase tracking-[0.16em] text-[rgb(var(--surface-lowest))] shadow-[0_20px_44px_rgba(15,23,42,0.12)] transition hover:-translate-y-0.5 hover:bg-[rgb(21,25,35)]"
+                className="inline-flex min-h-[3rem] items-center justify-center rounded-full bg-[rgb(var(--primary))] px-5 text-[0.78rem] font-semibold uppercase tracking-[0.16em] text-[rgb(14,18,26)] shadow-[0_20px_44px_rgba(0,0,0,0.24)] transition hover:-translate-y-0.5 hover:bg-[rgb(243,246,251)]"
               >
                 {homepageCopy.closing.primaryLabel}
               </Link>
               <Link
                 href={deploymentDirectionsHref}
-                className="inline-flex min-h-[3rem] items-center justify-center rounded-full border border-[rgb(var(--outline))] bg-[rgb(var(--surface-lowest))] px-5 text-[0.78rem] font-semibold uppercase tracking-[0.16em] text-[rgb(var(--ink))] transition hover:-translate-y-0.5 hover:border-[rgb(var(--outline-strong))] hover:shadow-[0_18px_40px_rgba(15,23,42,0.08)]"
+                className="inline-flex min-h-[3rem] items-center justify-center rounded-full border border-[rgb(var(--outline))] bg-[rgb(var(--surface-lowest))] px-5 text-[0.78rem] font-semibold uppercase tracking-[0.16em] text-[rgb(var(--ink))] transition hover:-translate-y-0.5 hover:border-[rgb(var(--outline-strong))] hover:bg-[rgba(29,35,47,0.96)] hover:shadow-[0_18px_40px_rgba(0,0,0,0.22)]"
               >
                 {homepageCopy.closing.secondaryLabel}
               </Link>
