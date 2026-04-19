@@ -95,28 +95,6 @@ const teamMemberDefinitions = {
       ja: ["分散システム", "クラウド基盤", "IoT システム"]
     }
   },
-  "jason-n": {
-    id: "jason-n",
-    name: "Jason N.",
-    role: {
-      en: "AI Engineer",
-      "zh-Hant": "AI 工程師",
-      ja: "AI エンジニア"
-    },
-    bio: {
-      en:
-        "Jason N. works across AI engineering, full-stack product build, and production-minded system implementation. His focus includes multi-agent LLM workflows, RAG and LLM operations, and the engineering detail needed to ship high-concurrency systems as usable product surfaces.",
-      "zh-Hant":
-        "Jason N. 專注於 AI 工程、全端產品建置與面向正式運作的系統實作，重點涵蓋 multi-agent LLM 流程、RAG / LLM Ops，以及把高併發系統落成可用產品介面的工程細節。",
-      ja:
-        "Jason N. は AI エンジニアリング、フルスタックなプロダクト実装、本番運用を見据えたシステム開発を担当します。マルチエージェント LLM ワークフロー、RAG / LLM Ops、高並行システムを実用的なプロダクト画面として仕上げる技術詳細に注力しています。"
-    },
-    tags: {
-      en: ["AI Engineering", "RAG / LLM Ops", "Production Systems"],
-      "zh-Hant": ["AI 工程", "RAG / LLM Ops", "生產系統"],
-      ja: ["AI エンジニアリング", "RAG / LLM Ops", "本番システム"]
-    }
-  },
   "john-snow": {
     id: "john-snow",
     name: "John Snow",
@@ -138,16 +116,16 @@ const teamMemberDefinitions = {
   },
   "guo-ng": {
     id: "guo-ng",
-    name: "C.Y Guo",
+    name: "C.Y. Guo",
     role: {
       en: "Brand & Marketing",
       "zh-Hant": "品牌與行銷",
       ja: "ブランド・マーケティング"
     },
     bio: {
-      en: "C.Y Guo works across brand promotion, brand communication, campaign support, and market-facing coordination. The role focuses on strengthening positioning clarity and keeping multi-channel communication aligned across outward-facing work.",
-      "zh-Hant": "C.Y Guo 參與品牌推廣、品牌傳播、活動支援與市場協調，重點在強化定位清晰度，並讓多渠道對外溝通保持一致。",
-      ja: "C.Y Guo はブランドプロモーション、ブランド発信、キャンペーン支援、市場向け調整に携わります。ポジショニングの明確さを保ち、複数チャネルの対外コミュニケーションを揃えることに重点を置いています。"
+      en: "C.Y. Guo works across brand promotion, brand communication, campaign support, and market-facing coordination. The role focuses on strengthening positioning clarity and keeping multi-channel communication aligned across outward-facing work.",
+      "zh-Hant": "C.Y. Guo 參與品牌推廣、品牌傳播、活動支援與市場協調，重點在強化定位清晰度，並讓多渠道對外溝通保持一致。",
+      ja: "C.Y. Guo はブランドプロモーション、ブランド発信、キャンペーン支援、市場向け調整に携わります。ポジショニングの明確さを保ち、複数チャネルの対外コミュニケーションを揃えることに重点を置いています。"
     },
     tags: {
       en: ["Brand Promotion", "Communications", "Marketing Coordination"],
@@ -172,7 +150,7 @@ const teamSectionDefinitions = [
       "zh-Hant": "負責產品方向、系統架構、AI 應用落地與工程執行。",
       ja: "プロダクト方針、システム設計、AI 実装、エンジニアリング実行を担当します。"
     },
-    memberIds: ["ryan-z", "randy-j", "jason-n"]
+    memberIds: ["ryan-z", "randy-j"]
   },
   {
     id: "market-founders",
@@ -196,11 +174,11 @@ const teamPageCopy = {
     homeDescription:
       "Bento AIII presents a compact founding team with clear ownership across product direction, engineering execution, and AI system delivery.",
     pageTitle:
-      "A five-person founding team organized across technical delivery and market growth.",
+      "A four-person founding team organized across technical delivery and market growth.",
     pageDescription:
       "The team page is grouped by function so responsibility stays readable: technical founders on one side, market founders on the other.",
     metrics: [
-      { label: "Team model", value: "Five-person founding team" },
+      { label: "Team model", value: "Four-person founding team" },
       { label: "Coverage", value: "Product / Engineering / AI / Market" },
       { label: "Working mode", value: "Grouped by technical and market leadership" }
     ],
@@ -213,11 +191,11 @@ const teamPageCopy = {
     homeTitle: "創始團隊涵蓋產品系統、工程與應用 AI 交付。",
     homeDescription:
       "Bento AIII 對外呈現的是一個分工清楚的創始團隊，負責產品方向、工程執行與 AI 系統交付。",
-    pageTitle: "一個由技術與市場職能構成的五人創始團隊。",
+    pageTitle: "一個由技術與市場職能構成的四人創始團隊。",
     pageDescription:
       "團隊頁改以職能分組呈現，讓技術創始團隊與市場創始團隊的責任邊界更清楚，也更符合實際運作方式。",
     metrics: [
-      { label: "團隊模式", value: "5 人創始團隊" },
+      { label: "團隊模式", value: "4 人創始團隊" },
       { label: "覆蓋範圍", value: "產品 / 工程 / AI / 市場" },
       { label: "組織方式", value: "依技術與市場職能分組" }
     ],
@@ -230,11 +208,11 @@ const teamPageCopy = {
     homeDescription:
       "Bento AIII は、プロダクト方針、実装、AI システムデリバリーを担う創業チームを、責任範囲が見える形で公開しています。",
     pageTitle:
-      "技術デリバリーと市場成長の役割で整理された 5 名の創業チームです。",
+      "技術デリバリーと市場成長の役割で整理された 4 名の創業チームです。",
     pageDescription:
       "チームページは職能ごとに整理しています。技術創業チームと市場創業チームを分けて、責任範囲が読み取りやすい構成にしています。",
     metrics: [
-      { label: "チーム構成", value: "5 名の創業チーム" },
+      { label: "チーム構成", value: "4 名の創業チーム" },
       { label: "担当領域", value: "プロダクト / エンジニアリング / AI / 市場" },
       { label: "構成方針", value: "技術と市場の役割で分割" }
     ],

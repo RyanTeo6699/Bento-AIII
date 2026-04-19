@@ -158,7 +158,7 @@ const en = {
     team: {
       eyebrow: "Team",
       title:
-        "A compact five-person team across product systems, engineering, AI, and marketing.",
+        "A compact four-person team across product systems, engineering, AI, and marketing.",
       description:
         "The team page shows the people currently shaping Bento AIII across product direction, system implementation, delivery, and outreach.",
       cta: "Meet the team"
@@ -304,14 +304,14 @@ const en = {
       description:
         "Bento AIII publishes the people currently shaping the company across product direction, technical execution, delivery, and marketing.",
       metrics: [
-        { label: "Team size", value: "5 published members" },
+        { label: "Team size", value: "4 published members" },
         { label: "Working model", value: "Cross-functional, compact delivery" },
         { label: "Coverage", value: "Product / Engineering / AI / Marketing" }
       ]
     },
     overview: {
       eyebrow: "Team",
-      title: "A five-person team with clear coverage across product, build, and outreach.",
+      title: "A four-person team with clear coverage across product, build, and outreach.",
       description:
         "The page stays factual: no padded biographies, no empty profile links, and no invented credentials."
     },
@@ -617,7 +617,7 @@ const dictionaries: Record<Locale, typeof en> = {
       },
       team: {
         eyebrow: "團隊",
-        title: "五人小團隊，涵蓋產品系統、工程、AI 與市場。",
+        title: "四人小團隊，涵蓋產品系統、工程、AI 與市場。",
         description:
           "團隊頁聚焦目前實際參與 Bento AIII 的成員，涵蓋產品方向、系統實作、交付與對外拓展。",
         cta: "查看團隊"
@@ -754,14 +754,14 @@ const dictionaries: Record<Locale, typeof en> = {
         description:
           "Bento AIII 對外公開的是目前實際參與公司方向的人，包含產品、技術、交付與市場角色。",
         metrics: [
-          { label: "團隊規模", value: "5 位公開成員" },
+          { label: "團隊規模", value: "4 位公開成員" },
           { label: "合作模式", value: "跨職能、小團隊交付" },
           { label: "覆蓋範圍", value: "產品 / 工程 / AI / 市場" }
         ]
       },
       overview: {
         eyebrow: "團隊",
-        title: "五人團隊，清楚覆蓋產品、建置與對外拓展。",
+        title: "四人團隊，清楚覆蓋產品、建置與對外拓展。",
         description:
           "頁面只保留可公開、可解釋的資訊：沒有灌水履歷、沒有空殼連結，也沒有虛構資歷。"
       },
@@ -1052,7 +1052,7 @@ const dictionaries: Record<Locale, typeof en> = {
       },
       team: {
         eyebrow: "チーム",
-        title: "プロダクトシステム、エンジニアリング、AI、マーケティングを担う 5 名体制。",
+        title: "プロダクトシステム、エンジニアリング、AI、マーケティングを担う 4 名体制。",
         description:
           "チームページでは、現在 Bento AIII を形づくっているメンバーを、役割と実務範囲に沿って紹介します。",
         cta: "チームを見る"
@@ -1192,14 +1192,14 @@ const dictionaries: Record<Locale, typeof en> = {
         description:
           "Bento AIII では、現在会社の方向を形づくっている人を、プロダクト、技術、デリバリー、マーケティングの実務に沿って公開しています。",
         metrics: [
-          { label: "チーム規模", value: "公開メンバー 5 名" },
+          { label: "チーム規模", value: "公開メンバー 4 名" },
           { label: "進め方", value: "小さく横断的なデリバリー" },
           { label: "カバー範囲", value: "プロダクト / エンジニアリング / AI / マーケ" }
         ]
       },
       overview: {
         eyebrow: "チーム",
-        title: "プロダクト、構築、対外展開を 5 名でカバーする体制。",
+        title: "プロダクト、構築、対外展開を 4 名でカバーする体制。",
         description:
           "ここでは、確認できる役割と担当範囲だけを載せています。誇張した経歴や空のプロフィールリンクは載せません。"
       },
