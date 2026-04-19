@@ -163,7 +163,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
               <Reveal key={step} delay={0.05 * index}>
                 <article className="border-t border-[rgb(var(--outline)/0.72)] pt-4">
                   <p className="text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-[rgb(var(--ink-muted))]">
-                    Step 0{index + 1}
+                    {projectCopy.stepLabel} {String(index + 1).padStart(2, "0")}
                   </p>
                   <p className="mt-3 text-[0.96rem] leading-7 text-[rgb(var(--ink))]">{step}</p>
                 </article>
@@ -206,7 +206,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
             <Reveal>
               <div className="border-t border-[rgb(var(--outline)/0.72)] pt-4">
                 <p className="text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-[rgb(var(--ink-muted))]">
-                  Not trying to be
+                  {projectCopy.notTryingLabel}
                 </p>
                 <div className="mt-4 space-y-3">
                   {project.differentiation.not.map((item) => (
@@ -224,7 +224,7 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
             <Reveal delay={0.06}>
               <div className="border-t border-[rgb(var(--outline)/0.72)] pt-4">
                 <p className="text-[0.66rem] font-semibold uppercase tracking-[0.16em] text-[rgb(var(--ink-muted))]">
-                  Value
+                  {projectCopy.valueLabel}
                 </p>
                 <p className="mt-4 max-w-[42rem] text-[0.98rem] leading-8 text-[rgb(var(--ink-soft))]">
                   {project.differentiation.value}
