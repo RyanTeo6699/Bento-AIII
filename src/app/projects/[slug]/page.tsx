@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 
 import { FinalCta } from "@/components/final-cta";
 import { Reveal } from "@/components/motion/reveal";
-import { ProjectCard } from "@/components/project-card";
+import { SectionHeading } from "@/components/section-heading";
 import { StatusBadge } from "@/components/status-badge";
 import { getSharedCtas } from "@/lib/cta";
 import { getCurrentLocale } from "@/lib/get-locale";
@@ -14,8 +14,7 @@ import { createPageMetadata } from "@/lib/metadata";
 import {
   getProjectBySlug,
   getProjectPresentationCopy,
-  getProjectSlugs,
-  getProjects
+  getProjectSlugs
 } from "@/lib/project-commercial";
 
 type ProjectDetailPageProps = {
@@ -47,7 +46,7 @@ export function generateMetadata({ params }: ProjectDetailPageProps): Metadata {
   return createPageMetadata({
     locale,
     title: project.name,
-    description: project.positioning,
+    description: project.definition,
     path: `/projects/${params.slug}`
   });
 }
@@ -57,20 +56,17 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   const dictionary = getDictionary(locale);
   const sharedCtas = getSharedCtas(locale);
   const projectCopy = getProjectPresentationCopy(locale);
-  const projects = getProjects(locale);
   const project = getProjectBySlug(locale, params.slug);
 
   if (!project) {
     notFound();
   }
 
-  const related = projects.filter((entry) => entry.slug !== project.slug).slice(0, 2);
-
   return (
     <>
-      <section className="pt-32 md:pt-36">
+      <section className="site-hero-section">
         <div className="shell">
-          <div className="boxed-section px-6 py-8 md:px-10 md:py-10">
+          <div className="boxed-section site-hero-frame">
             <Link
               href={buildLocalizedPath(locale, "/projects")}
               className="button-secondary inline-flex w-fit"
@@ -78,201 +74,283 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
               {dictionary.common.backToProjects}
             </Link>
 
-            <Reveal className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
-              <div className="space-y-6">
+            <Reveal className="mt-8 grid gap-8 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start">
+              <div className="max-w-4xl">
                 <div className="flex flex-wrap items-center gap-3">
                   <StatusBadge status={project.status} label={project.statusLabel} />
-                  <span className="project-chip bg-[rgb(var(--surface-container-high))]">
-                    {project.platform}
+                  <span className="project-chip bg-[rgb(var(--surface-container-high))] text-[rgb(var(--ink-soft))]">
+                    {project.category}
                   </span>
                 </div>
 
-                <h1 className="headline-page max-w-4xl">{project.name}</h1>
-                <p className="max-w-3xl text-lg leading-8 text-[rgb(var(--ink))]">
-                  {project.positioning}
-                </p>
-                <p className="max-w-3xl text-base leading-8 text-[rgb(var(--ink-soft))]">
-                  {project.description}
-                </p>
-
-                <div className="flex flex-wrap gap-2">
-                  {project.tags.map((tag, index) => (
-                    <span
-                      key={tag}
-                      className={`project-chip ${
-                        index === 0
-                          ? "bg-[rgb(var(--secondary-container))]"
-                          : index === 1
-                            ? "bg-[rgb(var(--tertiary-container))]"
-                            : ""
-                      }`}
-                    >
-                      {tag}
-                    </span>
-                  ))}
+                <div className="mt-6 space-y-5">
+                  <h1 className="headline-page max-w-4xl">{project.name}</h1>
+                  <p className="max-w-3xl text-lg leading-8 text-[rgb(var(--ink))]">
+                    {project.definition}
+                  </p>
+                  <p className="max-w-3xl text-base leading-8 text-[rgb(var(--ink-soft))]">
+                    {project.heroLead}
+                  </p>
                 </div>
               </div>
 
               <div className="surface p-6">
-                <p className="neo-microcopy">{projectCopy.valueCase}</p>
-                <p className="mt-3 text-sm leading-7 text-[rgb(var(--ink-soft))]">
-                  {project.commercial.valueCase}
+                <p className="neo-microcopy">{projectCopy.stageLabel}</p>
+                <p className="mt-3 text-sm leading-7 text-[rgb(var(--ink))]">
+                  {project.currentStatus.stage}
                 </p>
 
-                <div className="mt-6 border-t-[3px] border-dashed border-[rgb(var(--outline))] pt-5">
-                  <p className="neo-microcopy">{projectCopy.deliveryScope}</p>
-                  <p className="mt-3 text-sm leading-7 text-[rgb(var(--ink-muted))]">
-                    {project.commercial.deliveryScope}
+                <div className="mt-6 border-t border-[rgb(var(--outline)/0.72)] pt-5">
+                  <p className="neo-microcopy">{projectCopy.publicDemoLabel}</p>
+                  <p className="mt-3 text-sm leading-7 text-[rgb(var(--ink-soft))]">
+                    {project.visual.publicDemo}
                   </p>
                 </div>
+
+                {project.visual.projectLink ? (
+                  <div className="mt-6 border-t border-[rgb(var(--outline)/0.72)] pt-5">
+                    <p className="neo-microcopy">{projectCopy.projectLinkLabel}</p>
+                    <a
+                      href={project.visual.projectLink.href}
+                      className="mt-3 inline-flex text-sm font-medium leading-7 text-[rgb(var(--ink))] underline decoration-[rgb(var(--outline))] underline-offset-4"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {project.visual.projectLink.label}
+                    </a>
+                  </div>
+                ) : null}
               </div>
             </Reveal>
           </div>
         </div>
       </section>
 
-      <section className="py-24">
-        <div className="shell grid gap-6 lg:grid-cols-[1.12fr_0.88fr]">
+      <section className="site-section-tight">
+        <div className="shell">
+          <Reveal>
+            <SectionHeading
+              eyebrow={projectCopy.problemEyebrow}
+              title="Where the current workflow breaks."
+              description={project.problem}
+              compact
+            />
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="site-section-tight">
+        <div className="shell">
+          <Reveal>
+            <SectionHeading
+              eyebrow={projectCopy.whatItDoesEyebrow}
+              title="What the product is designed to carry forward."
+              description={project.whatItDoes}
+              compact
+            />
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="site-section-tight">
+        <div className="shell">
+          <Reveal>
+            <SectionHeading
+              eyebrow={projectCopy.coreWorkflowEyebrow}
+              title="A structured progression from entry to usable state."
+              description="Each project moves from fragmented input toward an updated workflow state that can be reviewed and continued."
+              compact
+            />
+          </Reveal>
+
+          <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {project.coreWorkflow.map((step, index) => (
+              <Reveal key={step} delay={0.05 * index}>
+                <div className="surface p-6">
+                  <p className="text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[rgb(var(--ink-muted))]">
+                    Step 0{index + 1}
+                  </p>
+                  <p className="mt-4 text-[0.98rem] leading-7 text-[rgb(var(--ink))]">{step}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="site-section-tight">
+        <div className="shell">
+          <Reveal>
+            <SectionHeading
+              eyebrow={projectCopy.coreFeaturesEyebrow}
+              title="Core features in the current product shape."
+              description="The feature layer stays focused on workflow clarity, retained state, and usable follow-through."
+              compact
+            />
+          </Reveal>
+
+          <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {project.coreFeatures.map((feature, index) => (
+              <Reveal key={feature.title} delay={0.05 * index}>
+                <div className="surface h-full p-6">
+                  <h3 className="text-[1.08rem] font-semibold leading-[1.05] tracking-[-0.04em] text-[rgb(var(--ink))]">
+                    {feature.title}
+                  </h3>
+                  <p className="mt-4 text-sm leading-7 text-[rgb(var(--ink-soft))]">
+                    {feature.body}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="site-section-tight">
+        <div className="shell grid gap-6 lg:grid-cols-[0.92fr_1.08fr]">
           <Reveal className="surface p-8">
-            <span className="section-kicker sticker-rotate-1">{projectCopy.whatItDoes}</span>
-            <div className="mt-5 space-y-4">
-              {project.detail.whatItDoes.map((paragraph) => (
-                <p key={paragraph} className="text-base leading-8 text-[rgb(var(--ink-soft))]">
-                  {paragraph}
-                </p>
+            <span className="section-kicker sticker-rotate-1">{projectCopy.differentiationEyebrow}</span>
+            <h2 className="mt-5 text-[2rem] font-semibold leading-[0.98] tracking-[-0.06em] text-[rgb(var(--ink))]">
+              What this product is not trying to be.
+            </h2>
+
+            <div className="mt-6 space-y-3">
+              {project.differentiation.not.map((item) => (
+                <div
+                  key={item}
+                  className="border-t border-[rgb(var(--outline)/0.72)] pt-3 text-sm leading-7 text-[rgb(var(--ink-soft))] first:border-t-0 first:pt-0"
+                >
+                  {item}
+                </div>
               ))}
             </div>
           </Reveal>
 
           <Reveal delay={0.06} className="surface p-8">
-            <span className="section-kicker sticker-rotate-3">{projectCopy.whyItMatters}</span>
-            <p className="mt-5 text-base leading-8 text-[rgb(var(--ink-soft))]">
-              {project.detail.whyItMatters}
+            <span className="section-kicker sticker-rotate-3">{projectCopy.differentiationEyebrow}</span>
+            <h2 className="mt-5 text-[2rem] font-semibold leading-[0.98] tracking-[-0.06em] text-[rgb(var(--ink))]">
+              Where the value actually comes from.
+            </h2>
+            <p className="mt-6 text-base leading-8 text-[rgb(var(--ink-soft))]">
+              {project.differentiation.value}
             </p>
-
-            <div className="mt-8 border-t-[3px] border-dashed border-[rgb(var(--outline))] pt-6">
-              <p className="neo-microcopy">{projectCopy.platformLabel}</p>
-              <p className="mt-3 text-sm leading-7 text-[rgb(var(--ink))]">{project.platform}</p>
-            </div>
           </Reveal>
         </div>
       </section>
 
-      <section className="py-24">
+      <section className="site-section-tight">
         <div className="shell">
-          <Reveal className="max-w-3xl">
-            <SectionHeaderStub label={projectCopy.systemHighlights} title={project.name} />
+          <Reveal>
+            <SectionHeading
+              eyebrow={projectCopy.bentoAngleEyebrow}
+              title="The product surface sits on a broader operating model."
+              description={project.bentoAngle.summary}
+              compact
+            />
           </Reveal>
 
-          <div className="mt-12 grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
-            {project.detail.highlights.map((item, index) => (
-              <Reveal key={item.title} delay={0.05 * index}>
-                <div className={`pack-card p-6 ${index % 2 === 0 ? "sticker-rotate-1" : ""}`}>
-                  <h3 className="text-3xl font-black leading-[0.98] tracking-[-0.05em] text-[rgb(var(--ink))]">
-                    {item.title}
-                  </h3>
-                  <p className="mt-4 text-sm leading-7 text-[rgb(var(--ink-soft))]">{item.body}</p>
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
+            {project.bentoAngle.layers.map((layer, index) => (
+              <Reveal key={layer.title} delay={0.05 * index}>
+                <div className="surface h-full p-6">
+                  <p className="neo-microcopy">{layer.title}</p>
+                  <p className="mt-4 text-sm leading-7 text-[rgb(var(--ink-soft))]">{layer.body}</p>
                 </div>
               </Reveal>
             ))}
           </div>
+
+          <Reveal delay={0.16} className="mt-6 surface p-7">
+            <p className="text-base leading-8 text-[rgb(var(--ink-soft))]">{project.bentoAngle.conclusion}</p>
+          </Reveal>
         </div>
       </section>
 
-      <section className="py-24">
+      <section className="site-section-tight">
         <div className="shell">
-          <Reveal className="max-w-3xl">
-            <SectionHeaderStub label={projectCopy.howItWorks} title={project.positioning} />
+          <Reveal>
+            <SectionHeading
+              eyebrow={projectCopy.currentStatusEyebrow}
+              title="What is already in place and what comes next."
+              description={project.currentStatus.stage}
+              compact
+            />
           </Reveal>
 
-          <div className="mt-12 grid gap-6 lg:grid-cols-2 xl:grid-cols-4">
-            {project.detail.flowSteps.map((step, index) => (
-              <Reveal key={step.title} delay={0.05 * index}>
-                <div className="surface p-6">
-                  <p className="sticker-badge bg-[rgb(var(--tertiary-container))] text-[rgb(var(--ink))]">
-                    0{index + 1}
-                  </p>
-                  <h3 className="mt-5 text-3xl font-black leading-[0.98] tracking-[-0.05em] text-[rgb(var(--ink))]">
-                    {step.title}
-                  </h3>
-                  <p className="mt-4 text-sm leading-7 text-[rgb(var(--ink-soft))]">{step.body}</p>
+          <Reveal delay={0.08} className="mt-10 surface p-8">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="project-chip bg-[rgb(var(--surface-container-high))] text-[rgb(var(--ink-soft))]">
+                {projectCopy.stageLabel}
+              </span>
+              <p className="text-sm leading-7 text-[rgb(var(--ink))]">{project.currentStatus.stage}</p>
+            </div>
+
+            <div className="mt-8 grid gap-8 border-t border-[rgb(var(--outline)/0.72)] pt-8 md:grid-cols-2">
+              <StatusList
+                label={project.currentStatus.alreadyLabel}
+                items={project.currentStatus.already}
+              />
+              <StatusList label={project.currentStatus.nextLabel} items={project.currentStatus.next} />
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="site-section">
+        <div className="shell">
+          <Reveal>
+            <SectionHeading
+              eyebrow={projectCopy.visualDemoEyebrow}
+              title="What is currently available for review."
+              description="Public demo availability stays explicit. Where material is not public, the page only shows the current reviewable assets."
+              compact
+            />
+          </Reveal>
+
+          <div className="mt-10 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+            <Reveal className="surface p-8">
+              <p className="neo-microcopy">{projectCopy.availableMaterialsLabel}</p>
+              <div className="mt-6 space-y-3">
+                {project.visual.availableMaterials.map((item) => (
+                  <div
+                    key={item}
+                    className="border-t border-[rgb(var(--outline)/0.72)] pt-3 text-sm leading-7 text-[rgb(var(--ink-soft))] first:border-t-0 first:pt-0"
+                  >
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.08} className="surface p-8">
+              <p className="neo-microcopy">{projectCopy.publicDemoLabel}</p>
+              <p className="mt-4 text-sm leading-7 text-[rgb(var(--ink-soft))]">
+                {project.visual.publicDemo}
+              </p>
+
+              {project.visual.projectLink ? (
+                <div className="mt-8 border-t border-[rgb(var(--outline)/0.72)] pt-6">
+                  <p className="neo-microcopy">{projectCopy.projectLinkLabel}</p>
+                  <a
+                    href={project.visual.projectLink.href}
+                    className="mt-3 inline-flex text-sm font-medium leading-7 text-[rgb(var(--ink))] underline decoration-[rgb(var(--outline))] underline-offset-4"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {project.visual.projectLink.label}
+                  </a>
                 </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="py-24">
-        <div className="shell grid gap-6 lg:grid-cols-2">
-          <Reveal className="surface p-8">
-            <span className="section-kicker sticker-rotate-1">{projectCopy.systemLayer}</span>
-            <p className="mt-5 text-base leading-8 text-[rgb(var(--ink-soft))]">
-              {project.detail.systemLayer}
-            </p>
-
-            <div className="mt-8 border-t-[3px] border-dashed border-[rgb(var(--outline))] pt-6">
-              <p className="neo-microcopy">{projectCopy.deliveryScope}</p>
-              <p className="mt-3 text-sm leading-7 text-[rgb(var(--ink-muted))]">
-                {project.commercial.deliveryScope}
-              </p>
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.08} className="surface p-8">
-            <span className="section-kicker sticker-rotate-3">{projectCopy.statusNext}</span>
-            <p className="mt-5 text-base leading-8 text-[rgb(var(--ink-soft))]">{project.detail.stage}</p>
-
-            <div className="mt-8 border-t-[3px] border-dashed border-[rgb(var(--outline))] pt-6">
-              <p className="neo-microcopy">{dictionary.common.nextStep}</p>
-              <p className="mt-3 text-sm leading-7 text-[rgb(var(--ink-soft))]">
-                {project.detail.nextStep}
-              </p>
-            </div>
-
-            <div className="mt-8 border-t-[3px] border-dashed border-[rgb(var(--outline))] pt-6">
-              <p className="neo-microcopy">{dictionary.common.disclosure}</p>
-              <p className="mt-3 text-sm leading-7 text-[rgb(var(--ink-muted))]">{project.disclosure}</p>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      <section className="py-24">
-        <div className="shell">
-          <Reveal className="max-w-3xl">
-            <SectionHeaderStub label={dictionary.common.relatedWork} title={projectCopy.relatedTitle} />
-          </Reveal>
-
-          <div className="mt-12 grid gap-6 lg:grid-cols-2">
-            {related.map((entry, index) => (
-              <Reveal key={entry.slug} delay={0.06 * index}>
-                <ProjectCard
-                  locale={locale}
-                  project={entry}
-                  variant={entry.comingSoon ? "emerging" : "default"}
-                  copy={{
-                    viewDetail: projectCopy.viewProject,
-                    learnMore: projectCopy.learnMore,
-                    idealUsers: projectCopy.idealUsers,
-                    deliveryScope: projectCopy.deliveryScope,
-                    keyOutcome: projectCopy.keyOutcome,
-                    valueCase: projectCopy.valueCase,
-                    platformLabel: projectCopy.platformLabel,
-                    statusLabels: dictionary.common.statusLabels
-                  }}
-                />
-              </Reveal>
-            ))}
+              ) : null}
+            </Reveal>
           </div>
         </div>
       </section>
 
       <FinalCta
         locale={locale}
-        eyebrow={dictionary.common.nextStep}
-        title={dictionary.projects.detail.finalCta.title}
-        description={dictionary.projects.detail.finalCta.description}
+        eyebrow={projectCopy.closingEyebrow}
+        title={project.closingCta}
+        description={projectCopy.closingDescription}
         primaryLabel={sharedCtas.startConversation}
         primaryHref="/contact"
         secondaryLabel={sharedCtas.viewProjects}
@@ -282,13 +360,20 @@ export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   );
 }
 
-function SectionHeaderStub({ label, title }: { label: string; title: string }) {
+function StatusList({ label, items }: { label: string; items: string[] }) {
   return (
-    <>
-      <span className="section-kicker sticker-rotate-1">{label}</span>
-      <h2 className="mt-5 max-w-4xl text-4xl font-black leading-[0.96] tracking-[-0.05em] text-[rgb(var(--ink))] md:text-5xl">
-        {title}
-      </h2>
-    </>
+    <div>
+      <p className="neo-microcopy">{label}</p>
+      <div className="mt-5 space-y-3">
+        {items.map((item) => (
+          <div
+            key={item}
+            className="border-t border-[rgb(var(--outline)/0.72)] pt-3 text-sm leading-7 text-[rgb(var(--ink-soft))] first:border-t-0 first:pt-0"
+          >
+            {item}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 }
